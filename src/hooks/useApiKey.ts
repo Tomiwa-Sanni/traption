@@ -1,14 +1,16 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 export function useApiKey() {
   const [apiKey, setApiKey] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   // Load API key from localStorage on component mount
   useEffect(() => {
-    const storedApiKey = localStorage.getItem('openai_api_key');
+    const storedApiKey = localStorage.getItem('huggingface_api_key');
     if (storedApiKey) {
       setApiKey(storedApiKey);
     }
@@ -22,9 +24,12 @@ export function useApiKey() {
     }
     
     try {
-      localStorage.setItem('openai_api_key', key.trim());
+      localStorage.setItem('huggingface_api_key', key.trim());
       setApiKey(key.trim());
       toast.success('API key saved successfully');
+      
+      // Navigate to main content
+      navigate('/', { replace: true });
       return true;
     } catch (error) {
       console.error('Error saving API key:', error);
@@ -35,7 +40,7 @@ export function useApiKey() {
 
   const clearApiKey = () => {
     try {
-      localStorage.removeItem('openai_api_key');
+      localStorage.removeItem('huggingface_api_key');
       setApiKey('');
       toast.success('API key removed');
       return true;

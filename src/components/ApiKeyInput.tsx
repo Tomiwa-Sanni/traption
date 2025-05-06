@@ -29,10 +29,10 @@ export function ApiKeyInput() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Key className="h-5 w-5 text-traption-purple" />
-          OpenAI API Key
+          HuggingFace API Key
         </CardTitle>
         <CardDescription>
-          Your API key is stored locally in your browser and never sent to our servers.
+          Your API key is stored locally in your browser and never sent to our servers. Get a free API key at <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">HuggingFace</a>.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -40,7 +40,7 @@ export function ApiKeyInput() {
           <div className="relative flex-grow">
             <Input
               type={showApiKey ? "text" : "password"}
-              placeholder="Enter your OpenAI API key"
+              placeholder="Enter your HuggingFace API key"
               value={inputApiKey}
               onChange={(e) => setInputApiKey(e.target.value)}
               className="pr-10"

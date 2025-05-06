@@ -27,7 +27,7 @@ export async function generateCaption({
   cta
 }: GenerateCaptionParams): Promise<string> {
   if (!apiKey) {
-    throw new Error('OpenAI API key is required');
+    throw new Error('API key is required');
   }
 
   const systemPrompt = `You are Traption, an expert social media copywriter with deep knowledge of ${platform} best practices. 
@@ -59,30 +59,30 @@ export async function generateCaption({
   `;
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Using HuggingFace's free API instead of OpenAI
+    const response = await fetch('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 500
+        inputs: userPrompt,
+        parameters: {
+          max_length: 500,
+          temperature: 0.7,
+        }
       })
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to generate caption');
+      throw new Error(error.error || 'Failed to generate caption');
     }
 
     const data = await response.json();
-    return data.choices[0].message.content.trim();
+    // HuggingFace response format is different from OpenAI
+    return data.generated_text || 'Unable to generate caption. Please try again.';
   } catch (error: any) {
     console.error('Error generating caption:', error);
     throw new Error(error.message || 'Failed to generate caption');
