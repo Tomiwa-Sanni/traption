@@ -124,14 +124,24 @@ export async function generateCaption({
         })
       });
       
-      const result = await response.json();
+      const text = await response.text();
       
-      if (response.status !== 200 || !result || !Array.isArray(result) || !result[0]?.generated_text) {
-        throw new Error(`API Error: ${JSON.stringify(result)}`);
+      if (!response.ok) {
+        throw new Error(`API Error: ${text}`);
+      }
+      
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (err) {
+        throw new Error(`Failed to parse JSON: ${text}`);
+      }
+      
+      if (!Array.isArray(result) || !result[0]?.generated_text) {
+        throw new Error(`Unexpected response format: ${JSON.stringify(result)}`);
       }
       
       return result[0].generated_text.trim();
-      
       
       
       
