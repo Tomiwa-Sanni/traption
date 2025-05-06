@@ -13,6 +13,7 @@ export function ApiKeyInput() {
 
   const handleSave = () => {
     saveApiKey(inputApiKey);
+    history.go(1)
   };
 
   const handleClear = () => {
