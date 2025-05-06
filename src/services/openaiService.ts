@@ -34,7 +34,7 @@ export async function generateCaption({
   const results: Record < string, string > = {};
   
   // Function to generate a single caption
-  async function generateSingleCaption(currentPlatform: string): Promise<string> {
+  async function generateSingleCaption(currentPlatform: string): Promise < string > {
   const systemPrompt = `You are Traption, an expert social media copywriter with deep knowledge of ${currentPlatform} best practices. 
   Create a compelling ${currentPlatform} caption with these specifications:
   - Tone: ${tone}
@@ -46,7 +46,7 @@ export async function generateCaption({
   - Call to Action: ${cta || 'None specified'}
   
   Return only the caption text, no explanations or additional comments.`;
-
+  
   const userPrompt = `
   Create a ${currentPlatform} caption for the following:
   
@@ -57,14 +57,15 @@ export async function generateCaption({
   
   Make the caption appropriate for ${currentPlatform}, following its character limitations and best practices.
   `;
-
+  
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://yourdomain.com', // Replace with your actual domain or portfolio
-        'X-Title': 'Traption', // Your app or project name
+        'Authorization': `Bearer ${apiKey}`, // <-- from form
+        'HTTP-Referer': 'https://yourdomain.com', // required
+        'X-Title': 'Traption',
       },
       body: JSON.stringify({
         model: 'mistralai/mistral-7b-instruct',
@@ -74,13 +75,13 @@ export async function generateCaption({
         ]
       })
     });
-
+    
     const result = await response.json();
-
+    
     if (!response.ok || !result.choices || !result.choices[0]?.message?.content) {
       throw new Error(`API Error: ${JSON.stringify(result)}`);
     }
-
+    
     return result.choices[0].message.content.trim();
   } catch (error: any) {
     console.error(`Error generating caption for ${currentPlatform}:`, error);
