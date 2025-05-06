@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Instagram, Facebook, Linkedin, Youtube, Search, Pinterest } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Platform {
@@ -50,7 +50,7 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
     {
       id: 'pinterest',
       name: 'Pinterest',
-      icon: <Pinterest className="h-5 w-5" />,
+      icon: <div className="text-lg font-bold">P</div>,
       color: 'bg-platform-pinterest',
     },
     {
