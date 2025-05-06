@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption } from '@/services/openaiService';
 import { Header } from '@/components/Header';
@@ -35,6 +35,47 @@ const Index = () => {
   // Generated caption
   const [caption, setCaption] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Load and save customization settings using localStorage
+  useEffect(() => {
+    // Load settings on initial render
+    const loadSettings = () => {
+      const savedPlatform = localStorage.getItem('traption_platform');
+      const savedTone = localStorage.getItem('traption_tone');
+      const savedStyle = localStorage.getItem('traption_style');
+      const savedEmojis = localStorage.getItem('traption_emojis');
+      const savedHashtags = localStorage.getItem('traption_hashtags');
+      const savedLanguage = localStorage.getItem('traption_language');
+      const savedCaption = localStorage.getItem('traption_caption');
+      
+      if (savedPlatform) setSelectedPlatform(savedPlatform);
+      if (savedTone) setTone(savedTone);
+      if (savedStyle) setStyle(savedStyle);
+      if (savedEmojis) setIncludeEmojis(savedEmojis === 'true');
+      if (savedHashtags) setIncludeHashtags(savedHashtags === 'true');
+      if (savedLanguage) setLanguage(savedLanguage);
+      if (savedCaption) setCaption(savedCaption);
+    };
+    
+    loadSettings();
+  }, []);
+  
+  // Save settings whenever they change
+  useEffect(() => {
+    localStorage.setItem('traption_platform', selectedPlatform);
+    localStorage.setItem('traption_tone', tone);
+    localStorage.setItem('traption_style', style);
+    localStorage.setItem('traption_emojis', String(includeEmojis));
+    localStorage.setItem('traption_hashtags', String(includeHashtags));
+    localStorage.setItem('traption_language', language);
+  }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language]);
+  
+  // Save caption whenever it changes
+  useEffect(() => {
+    if (caption) {
+      localStorage.setItem('traption_caption', caption);
+    }
+  }, [caption]);
 
   const handleGenerate = async () => {
     if (!description) {

@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,12 +30,64 @@ export function InputFields({
 }: InputFieldsProps) {
   const [keywordInput, setKeywordInput] = useState('');
 
-  const addKeyword = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && keywordInput.trim()) {
-      e.preventDefault();
-      if (!keywords.includes(keywordInput.trim())) {
-        setKeywords([...keywords, keywordInput.trim()]);
+  // Store form values in local storage
+  useEffect(() => {
+    // Save current values to localStorage whenever they change
+    const saveToLocalStorage = () => {
+      localStorage.setItem('traption_description', description);
+      localStorage.setItem('traption_audience', audience);
+      localStorage.setItem('traption_keywords', JSON.stringify(keywords));
+      localStorage.setItem('traption_cta', cta);
+    };
+    
+    saveToLocalStorage();
+  }, [description, audience, keywords, cta]);
+
+  // Load values from localStorage on initial render
+  useEffect(() => {
+    const savedDescription = localStorage.getItem('traption_description');
+    const savedAudience = localStorage.getItem('traption_audience');
+    const savedKeywords = localStorage.getItem('traption_keywords');
+    const savedCta = localStorage.getItem('traption_cta');
+    
+    if (savedDescription) setDescription(savedDescription);
+    if (savedAudience) setAudience(savedAudience);
+    if (savedKeywords) {
+      try {
+        const parsedKeywords = JSON.parse(savedKeywords);
+        if (Array.isArray(parsedKeywords)) {
+          setKeywords(parsedKeywords);
+        }
+      } catch (e) {
+        console.error('Error parsing keywords from localStorage:', e);
       }
+    }
+    if (savedCta) setCta(savedCta);
+  }, []);
+
+  const handleKeywordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeywordInput(e.target.value);
+    
+    // Process keywords on comma
+    if (e.target.value.includes(',')) {
+      const newKeywords = e.target.value.split(',').map(k => k.trim()).filter(k => k !== '');
+      
+      // Add new keywords that don't already exist
+      const uniqueNewKeywords = newKeywords.filter(k => !keywords.includes(k));
+      if (uniqueNewKeywords.length > 0) {
+        setKeywords([...keywords, ...uniqueNewKeywords]);
+      }
+      
+      // Clear the input or keep the part after the last comma
+      const lastPart = e.target.value.split(',').pop() || '';
+      setKeywordInput(lastPart.trim());
+    }
+  };
+
+  const handleKeywordInputBlur = () => {
+    // Add any remaining text as a keyword when the input loses focus
+    if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
+      setKeywords([...keywords, keywordInput.trim()]);
       setKeywordInput('');
     }
   };
@@ -73,13 +124,13 @@ export function InputFields({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="keywords">Keywords (Press Enter to add)</Label>
+          <Label htmlFor="keywords">Keywords (Separate with commas)</Label>
           <Input
             id="keywords"
-            placeholder="Add keywords to include..."
+            placeholder="Add keywords separated by commas..."
             value={keywordInput}
-            onChange={(e) => setKeywordInput(e.target.value)}
-            onKeyDown={addKeyword}
+            onChange={handleKeywordInputChange}
+            onBlur={handleKeywordInputBlur}
           />
           <div className="flex flex-wrap gap-2 mt-2">
             {keywords.map((keyword) => (

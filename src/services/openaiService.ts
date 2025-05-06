@@ -31,31 +31,26 @@ export async function generateCaption({
   }
 
   const systemPrompt = `You are Traption, an expert social media copywriter with deep knowledge of ${platform} best practices. 
-  Create a compelling ${platform} caption that is optimized for engagement on this specific platform.`;
+  Create a compelling ${platform} caption with these specifications:
+  - Tone: ${tone}
+  - Style: ${style}
+  - Language: ${language}
+  - ${includeEmojis ? 'Include relevant emojis throughout the caption' : 'Do not use emojis'}
+  - ${includeHashtags ? 'Include 3-5 relevant hashtags at the end' : 'Do not include hashtags'}
+  - Target audience: ${audience || 'General audience'}
+  - Call to Action: ${cta || 'None specified'}
   
-  const styleGuide = {
-    'hook-story-offer': "Start with an attention-grabbing hook, tell a brief story, then present an offer or value proposition",
-    'problem-agitate-solution': "Identify a problem, emphasize its impact, then present a solution",
-    'listicle': "Create a numbered list of points, tips, or benefits",
-    'question-based': "Use thought-provoking questions to engage the audience"
-  };
-
-  let emoji = includeEmojis ? "Include relevant emojis throughout the caption to increase engagement" : "Do not include emojis";
-  let hashtags = includeHashtags ? `Include 3-5 relevant hashtags that would perform well on ${platform}` : "Do not include hashtags";
+  Return only the caption text, no explanations or additional comments.`;
 
   const userPrompt = `
-  Create a ${tone} caption for a ${platform} post.
-  Post description: ${description}
-  Target audience: ${audience}
-  Keywords to include: ${keywords.join(', ')}
-  Call to action: ${cta}
-  Caption style: ${styleGuide[style as keyof typeof styleGuide] || "Create an engaging narrative"}
-  ${emoji}.
-  ${hashtags}.
-  Write the caption in ${language}.
+  Create a ${platform} caption for the following:
   
-  The caption should be optimized for ${platform}'s character limits and best practices. 
-  Make sure it's engaging and likely to drive the desired action from the target audience.
+  Content description: ${description}
+  ${keywords.length > 0 ? `Keywords to include: ${keywords.join(', ')}` : ''}
+  ${audience ? `Target audience: ${audience}` : ''}
+  ${cta ? `Call to action: ${cta}` : ''}
+  
+  Make the caption appropriate for ${platform}, following its character limitations and best practices.
   `;
 
   try {
@@ -75,14 +70,20 @@ export async function generateCaption({
       })
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to generate caption');
+    const text = await response.text();
+    
+    try {
+      // Try to parse as JSON first
+      const data = JSON.parse(text);
+      return data.generated_text || 'Unable to generate caption. Please try again.';
+    } catch (jsonError) {
+      // If not valid JSON, check if it's an error message
+      if (text.includes('Not Found') || text.includes('Error')) {
+        throw new Error(`API Error: ${text}`);
+      }
+      // Just return the text as is if not JSON
+      return text;
     }
-
-    const data = await response.json();
-    // HuggingFace response format is different from OpenAI
-    return data.generated_text || 'Unable to generate caption. Please try again.';
   } catch (error: any) {
     console.error('Error generating caption:', error);
     throw new Error(error.message || 'Failed to generate caption');

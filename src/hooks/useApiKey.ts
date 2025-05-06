@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function useApiKey() {
   const [apiKey, setApiKey] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Load API key from localStorage on component mount
   useEffect(() => {
@@ -28,8 +29,10 @@ export function useApiKey() {
       setApiKey(key.trim());
       toast.success('API key saved successfully');
       
-      // Navigate to main content
-      navigate('/', { replace: true });
+      // Only navigate if we're not already on the home page
+      if (location.pathname !== '/') {
+        navigate('/', { replace: true });
+      }
       return true;
     } catch (error) {
       console.error('Error saving API key:', error);
