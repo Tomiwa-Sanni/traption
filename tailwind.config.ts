@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,16 +53,28 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
+				traption: {
+					purple: '#6B46C1',
+					lavender: '#E9D8FD',
+					light: '#F3EBFF',
+				},
+				platform: {
+					instagram: '#E1306C',
+					tiktok: '#000000',
+					twitter: '#1DA1F2',
+					linkedin: '#0077B5',
+					facebook: '#4267B2',
+					pinterest: '#E60023',
+					youtube: '#FF0000',
+					google: '#4285F4',
+				},
+				tone: {
+					professional: '#0077B5',
+					casual: '#4CAF50',
+					witty: '#FF9800',
+					inspirational: '#9C27B0',
+					promotional: '#F44336',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +97,16 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'pulse-gentle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-gentle': 'pulse-gentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 			}
 		}
 	},

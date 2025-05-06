@@ -1,0 +1,71 @@
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useApiKey } from '@/hooks/useApiKey';
+import { Eye, EyeOff, Key, Save, Trash } from 'lucide-react';
+
+export function ApiKeyInput() {
+  const { apiKey, saveApiKey, clearApiKey } = useApiKey();
+  const [inputApiKey, setInputApiKey] = useState(apiKey || '');
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  const handleSave = () => {
+    saveApiKey(inputApiKey);
+  };
+
+  const handleClear = () => {
+    clearApiKey();
+    setInputApiKey('');
+  };
+
+  const toggleShowApiKey = () => {
+    setShowApiKey(!showApiKey);
+  };
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Key className="h-5 w-5 text-traption-purple" />
+          OpenAI API Key
+        </CardTitle>
+        <CardDescription>
+          Your API key is stored locally in your browser and never sent to our servers.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-2">
+          <div className="relative flex-grow">
+            <Input
+              type={showApiKey ? "text" : "password"}
+              placeholder="Enter your OpenAI API key"
+              value={inputApiKey}
+              onChange={(e) => setInputApiKey(e.target.value)}
+              className="pr-10"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-0 top-0 h-full"
+              onClick={toggleShowApiKey}
+            >
+              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" onClick={handleClear} disabled={!apiKey}>
+          <Trash className="mr-2 h-4 w-4" />
+          Clear
+        </Button>
+        <Button onClick={handleSave}>
+          <Save className="mr-2 h-4 w-4" />
+          Save API Key
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
