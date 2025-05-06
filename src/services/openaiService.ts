@@ -109,39 +109,24 @@ export async function generateCaption({
          return text;
        }*/
       
-      const response = await fetch('https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', {
+      const response = await fetch('https://api.deepai.org/api/text-generator', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K', // This is the public free key provided by DeepAI
         },
-        body: JSON.stringify({
-          inputs: `${systemPrompt}\n\n${userPrompt}`,
-          parameters: {
-            max_new_tokens: 150,
-            temperature: 0.7,
-          }
-        })
+        body: new URLSearchParams({
+          text: `${systemPrompt}\n\n${userPrompt}`,
+        }),
       });
       
-      const text = await response.text();
+      const result = await response.json();
       
-      if (!response.ok) {
-        throw new Error(`API Error: ${text}`);
+      if (!response.ok || !result.output) {
+        throw new Error(`API Error: ${JSON.stringify(result)}`);
       }
       
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch (err) {
-        throw new Error(`Failed to parse JSON: ${text}`);
-      }
-      
-      if (!Array.isArray(result) || !result[0]?.generated_text) {
-        throw new Error(`Unexpected response format: ${JSON.stringify(result)}`);
-      }
-      
-      return result[0].generated_text.trim();
+      return result.output.trim();
       
       
       
