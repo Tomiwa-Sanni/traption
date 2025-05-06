@@ -6,6 +6,7 @@ import { Instagram, Facebook, Linkedin, Youtube, Search, Copy } from 'lucide-rea
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface CaptionPreviewProps {
   caption: string | Record<string, string>;
@@ -72,41 +73,48 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
           <>
             {isMultiPlatform ? (
               <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="flex mb-4 overflow-x-auto">
+                <div className="relative">
+                  <ScrollArea className="w-full pb-2" orientation="horizontal">
+                    <TabsList className="flex mb-4 w-max">
+                      {platforms.map((p) => (
+                        <TabsTrigger key={p} value={p} className="flex items-center gap-2">
+                          {getPlatformIcon(p)}
+                          <span>{getPlatformName(p)}</span>
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </ScrollArea>
+                </div>
+                
+                <ScrollArea className="h-[200px]">
                   {platforms.map((p) => (
-                    <TabsTrigger key={p} value={p} className="flex items-center gap-2">
-                      {getPlatformIcon(p)}
-                      <span>{getPlatformName(p)}</span>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-                {platforms.map((p) => (
-                  <TabsContent key={p} value={p} className="space-y-4">
-                    <div className="relative min-h-24 bg-muted p-4 rounded-md">
-                      {captions[p] ? (
-                        <pre className="whitespace-pre-wrap font-sans break-words">
-                          {captions[p]}
-                        </pre>
-                      ) : (
-                        <p className="text-muted-foreground">Generate a caption to see it here.</p>
+                    <TabsContent key={p} value={p} className="space-y-4 mt-0">
+                      <div className="relative bg-muted p-4 rounded-md">
+                        {captions[p] ? (
+                          <pre className="whitespace-pre-wrap font-sans break-words">
+                            {captions[p]}
+                          </pre>
+                        ) : (
+                          <p className="text-muted-foreground">Generate a caption to see it here.</p>
+                        )}
+                      </div>
+                      {captions[p] && (
+                        <Button 
+                          variant="secondary" 
+                          onClick={() => copyToClipboard(captions[p])}
+                          className="w-full flex gap-2 items-center justify-center"
+                        >
+                          <Copy className="h-4 w-4" />
+                          Copy {getPlatformName(p)} Caption
+                        </Button>
                       )}
-                    </div>
-                    {captions[p] && (
-                      <Button 
-                        variant="secondary" 
-                        onClick={() => copyToClipboard(captions[p])}
-                        className="w-full flex gap-2 items-center justify-center"
-                      >
-                        <Copy className="h-4 w-4" />
-                        Copy {getPlatformName(p)} Caption
-                      </Button>
-                    )}
-                  </TabsContent>
-                ))}
+                    </TabsContent>
+                  ))}
+                </ScrollArea>
               </Tabs>
             ) : (
-              <>
-                <div className="relative min-h-24 bg-muted p-4 rounded-md">
+              <ScrollArea className="h-[200px]">
+                <div className="relative bg-muted p-4 rounded-md">
                   {caption ? (
                     <pre className="whitespace-pre-wrap font-sans break-words">
                       {typeof caption === 'string' ? caption : captions[platforms[0]] || ''}
@@ -119,13 +127,13 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                   <Button 
                     variant="secondary" 
                     onClick={() => copyToClipboard(typeof caption === 'string' ? caption : captions[platforms[0]] || '')}
-                    className="w-full flex gap-2 items-center justify-center"
+                    className="w-full flex gap-2 items-center justify-center mt-4"
                   >
                     <Copy className="h-4 w-4" />
                     Copy Caption
                   </Button>
                 )}
-              </>
+              </ScrollArea>
             )}
           </>
         )}

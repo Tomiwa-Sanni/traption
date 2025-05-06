@@ -1,24 +1,13 @@
 
-import { cn } from '@/lib/utils';
+import React from 'react';
 
-interface FooterProps {
-  className?: string;
-}
-
-export function Footer({ className }: FooterProps) {
+export const Footer: React.FC = () => {
   return (
-    <footer className={cn("py-6 border-t border-border mt-auto", className)}>
-      <div className="container">
-        <div className="flex flex-col items-center justify-center gap-2 text-center sm:flex-row">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Traption. All rights reserved.
-          </p>
-          <div className="text-sm text-muted-foreground">
-            <span className="mx-1">•</span>
-            <span>Created with Lovable</span>
-          </div>
-        </div>
+    <footer className="mt-12 py-6 border-t">
+      <div className="container flex flex-col items-center justify-center text-sm text-muted-foreground">
+        <p>Traption by Tresh Tech, copyright Tresh Tech</p>
+        <p className="mt-2">© {new Date().getFullYear()} All rights reserved</p>
       </div>
     </footer>
   );
-}
+};
