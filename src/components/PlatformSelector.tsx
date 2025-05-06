@@ -11,11 +11,14 @@ interface Platform {
 }
 
 interface PlatformSelectorProps {
-  selectedPlatform: string;
-  onSelectPlatform: (platform: string) => void;
+  selectedPlatform: string | string[];
+  onSelectPlatform: (platform: string | string[]) => void;
 }
 
 export function PlatformSelector({ selectedPlatform, onSelectPlatform }: PlatformSelectorProps) {
+  // Convert selectedPlatform to array for consistent handling
+  const selectedPlatforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
+
   const platforms: Platform[] = [
     {
       id: 'instagram',
@@ -67,17 +70,31 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
     },
   ];
 
+  const togglePlatform = (platformId: string) => {
+    if (selectedPlatforms.includes(platformId)) {
+      // Remove platform if already selected (but ensure at least one platform remains selected)
+      const newSelection = selectedPlatforms.filter(id => id !== platformId);
+      if (newSelection.length > 0) {
+        onSelectPlatform(newSelection.length === 1 ? newSelection[0] : newSelection);
+      }
+    } else {
+      // Add platform to selection
+      const newSelection = [...selectedPlatforms, platformId];
+      onSelectPlatform(newSelection.length === 1 ? newSelection[0] : newSelection);
+    }
+  };
+
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-medium">Select Platform</h3>
+      <h3 className="text-lg font-medium">Select Platform(s)</h3>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {platforms.map((platform) => (
           <button
             key={platform.id}
-            onClick={() => onSelectPlatform(platform.id)}
+            onClick={() => togglePlatform(platform.id)}
             className={cn(
               "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary",
-              selectedPlatform === platform.id
+              selectedPlatforms.includes(platform.id)
                 ? "border-2 border-primary bg-primary/5"
                 : "border-border bg-card"
             )}

@@ -17,7 +17,7 @@ const Index = () => {
   const { apiKey, hasApiKey } = useApiKey();
   
   // Platform state
-  const [selectedPlatform, setSelectedPlatform] = useState('instagram');
+  const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
   
   // Customization options
   const [tone, setTone] = useState('casual');
@@ -33,7 +33,7 @@ const Index = () => {
   const [cta, setCta] = useState('');
   
   // Generated caption
-  const [caption, setCaption] = useState('');
+  const [caption, setCaption] = useState<string | Record<string, string>>('');
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Load and save customization settings using localStorage
@@ -47,14 +47,52 @@ const Index = () => {
       const savedHashtags = localStorage.getItem('traption_hashtags');
       const savedLanguage = localStorage.getItem('traption_language');
       const savedCaption = localStorage.getItem('traption_caption');
+      const savedDescription = localStorage.getItem('traption_description');
+      const savedAudience = localStorage.getItem('traption_audience');
+      const savedKeywords = localStorage.getItem('traption_keywords');
+      const savedCta = localStorage.getItem('traption_cta');
       
-      if (savedPlatform) setSelectedPlatform(savedPlatform);
+      if (savedPlatform) {
+        try {
+          // Try to parse as JSON array first
+          const parsedPlatform = JSON.parse(savedPlatform);
+          setSelectedPlatform(parsedPlatform);
+        } catch (e) {
+          // If not JSON, treat as single string
+          setSelectedPlatform(savedPlatform);
+        }
+      }
+      
       if (savedTone) setTone(savedTone);
       if (savedStyle) setStyle(savedStyle);
       if (savedEmojis) setIncludeEmojis(savedEmojis === 'true');
       if (savedHashtags) setIncludeHashtags(savedHashtags === 'true');
       if (savedLanguage) setLanguage(savedLanguage);
-      if (savedCaption) setCaption(savedCaption);
+      if (savedDescription) setDescription(savedDescription);
+      if (savedAudience) setAudience(savedAudience);
+      if (savedCta) setCta(savedCta);
+      
+      if (savedKeywords) {
+        try {
+          const parsedKeywords = JSON.parse(savedKeywords);
+          if (Array.isArray(parsedKeywords)) {
+            setKeywords(parsedKeywords);
+          }
+        } catch (e) {
+          console.error('Error parsing keywords from localStorage:', e);
+        }
+      }
+      
+      if (savedCaption) {
+        try {
+          // Try to parse as JSON first (for multi-platform captions)
+          const parsedCaption = JSON.parse(savedCaption);
+          setCaption(parsedCaption);
+        } catch (e) {
+          // If not JSON, treat as single string
+          setCaption(savedCaption);
+        }
+      }
     };
     
     loadSettings();
@@ -62,18 +100,27 @@ const Index = () => {
   
   // Save settings whenever they change
   useEffect(() => {
-    localStorage.setItem('traption_platform', selectedPlatform);
+    const platformToSave = Array.isArray(selectedPlatform) ? JSON.stringify(selectedPlatform) : selectedPlatform;
+    localStorage.setItem('traption_platform', platformToSave);
     localStorage.setItem('traption_tone', tone);
     localStorage.setItem('traption_style', style);
     localStorage.setItem('traption_emojis', String(includeEmojis));
     localStorage.setItem('traption_hashtags', String(includeHashtags));
     localStorage.setItem('traption_language', language);
   }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language]);
+
+  // Save input values whenever they change
+  useEffect(() => {
+    localStorage.setItem('traption_description', description);
+    localStorage.setItem('traption_audience', audience);
+    localStorage.setItem('traption_keywords', JSON.stringify(keywords));
+    localStorage.setItem('traption_cta', cta);
+  }, [description, audience, keywords, cta]);
   
   // Save caption whenever it changes
   useEffect(() => {
     if (caption) {
-      localStorage.setItem('traption_caption', caption);
+      localStorage.setItem('traption_caption', typeof caption === 'object' ? JSON.stringify(caption) : caption);
     }
   }, [caption]);
 

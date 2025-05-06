@@ -1,89 +1,135 @@
 
-import { useState } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, Download } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Search, Copy } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface CaptionPreviewProps {
-  caption: string;
-  platform: string;
+  caption: string | Record<string, string>;
+  platform: string | string[];
   isLoading: boolean;
 }
 
 export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewProps) {
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(caption);
-      toast.success('Caption copied to clipboard!');
-    } catch (error) {
-      toast.error('Failed to copy caption');
+  // Convert platforms to array for consistent handling
+  const platforms = Array.isArray(platform) ? platform : [platform];
+  const isMultiPlatform = platforms.length > 1;
+  
+  // Convert caption to record for consistent handling
+  const captions: Record<string, string> = typeof caption === 'string' 
+    ? { [platforms[0]]: caption } 
+    : caption as Record<string, string>;
+  
+  const [activeTab, setActiveTab] = useState<string>(platforms[0]);
+
+  // Get platform icon
+  const getPlatformIcon = (platform: string) => {
+    switch (platform) {
+      case 'instagram': return <Instagram className="h-5 w-5" />;
+      case 'facebook': return <Facebook className="h-5 w-5" />;
+      case 'linkedin': return <Linkedin className="h-5 w-5" />;
+      case 'youtube': return <Youtube className="h-5 w-5" />;
+      case 'google': return <Search className="h-5 w-5" />;
+      case 'tiktok': return <div className="text-sm font-bold">TT</div>;
+      case 'twitter': return <div className="text-sm font-bold">X</div>;
+      case 'pinterest': return <div className="text-sm font-bold">P</div>;
+      default: return null;
     }
   };
 
-  const downloadCaption = () => {
-    try {
-      const element = document.createElement('a');
-      const file = new Blob([caption], { type: 'text/plain' });
-      element.href = URL.createObjectURL(file);
-      element.download = `${platform}-caption-${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-      toast.success('Caption downloaded!');
-    } catch (error) {
-      toast.error('Failed to download caption');
+  const getPlatformName = (platform: string) => {
+    switch (platform) {
+      case 'twitter': return 'Twitter (X)';
+      case 'google': return 'Google My Business';
+      default: return platform.charAt(0).toUpperCase() + platform.slice(1);
     }
   };
 
-  const platformClass = platform ? `border-platform-${platform}` : '';
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Caption copied to clipboard!');
+  };
 
   return (
-    <Card className={`h-full flex flex-col ${platformClass}`}>
+    <Card className="h-full">
       <CardHeader>
-        <CardTitle className="capitalize">
-          {platform ? `${platform} Caption Preview` : 'Caption Preview'}
+        <CardTitle className="flex items-center justify-between">
+          <span>Generated Caption</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <div className="bg-muted rounded-lg p-4 h-full overflow-auto whitespace-pre-wrap">
-          {isLoading ? (
-            <div className="space-y-2">
-              <div className="h-4 bg-muted-foreground/20 rounded animate-pulse-gentle w-3/4" />
-              <div className="h-4 bg-muted-foreground/20 rounded animate-pulse-gentle w-5/6" />
-              <div className="h-4 bg-muted-foreground/20 rounded animate-pulse-gentle w-2/3" />
-              <div className="h-4 bg-muted-foreground/20 rounded animate-pulse-gentle w-4/5" />
-              <div className="h-4 bg-muted-foreground/20 rounded animate-pulse-gentle w-3/5" />
-            </div>
-          ) : caption ? (
-            caption
-          ) : (
-            <span className="text-muted-foreground italic">
-              Your generated caption will appear here...
-            </span>
-          )}
-        </div>
+      <CardContent className="space-y-4">
+        {isLoading ? (
+          // Loading skeleton
+          <div className="space-y-4">
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-5 w-4/5" />
+          </div>
+        ) : (
+          <>
+            {isMultiPlatform ? (
+              <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="flex mb-4 overflow-x-auto">
+                  {platforms.map((p) => (
+                    <TabsTrigger key={p} value={p} className="flex items-center gap-2">
+                      {getPlatformIcon(p)}
+                      <span>{getPlatformName(p)}</span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                {platforms.map((p) => (
+                  <TabsContent key={p} value={p} className="space-y-4">
+                    <div className="relative min-h-24 bg-muted p-4 rounded-md">
+                      {captions[p] ? (
+                        <pre className="whitespace-pre-wrap font-sans break-words">
+                          {captions[p]}
+                        </pre>
+                      ) : (
+                        <p className="text-muted-foreground">Generate a caption to see it here.</p>
+                      )}
+                    </div>
+                    {captions[p] && (
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => copyToClipboard(captions[p])}
+                        className="w-full flex gap-2 items-center justify-center"
+                      >
+                        <Copy className="h-4 w-4" />
+                        Copy {getPlatformName(p)} Caption
+                      </Button>
+                    )}
+                  </TabsContent>
+                ))}
+              </Tabs>
+            ) : (
+              <>
+                <div className="relative min-h-24 bg-muted p-4 rounded-md">
+                  {caption ? (
+                    <pre className="whitespace-pre-wrap font-sans break-words">
+                      {typeof caption === 'string' ? caption : captions[platforms[0]] || ''}
+                    </pre>
+                  ) : (
+                    <p className="text-muted-foreground">Generate a caption to see it here.</p>
+                  )}
+                </div>
+                {caption && (
+                  <Button 
+                    variant="secondary" 
+                    onClick={() => copyToClipboard(typeof caption === 'string' ? caption : captions[platforms[0]] || '')}
+                    className="w-full flex gap-2 items-center justify-center"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy Caption
+                  </Button>
+                )}
+              </>
+            )}
+          </>
+        )}
       </CardContent>
-      <CardFooter className="gap-2">
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={copyToClipboard}
-          disabled={!caption || isLoading}
-        >
-          <Copy className="mr-2 h-4 w-4" />
-          Copy
-        </Button>
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={downloadCaption}
-          disabled={!caption || isLoading}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
