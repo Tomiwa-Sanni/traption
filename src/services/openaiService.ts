@@ -64,7 +64,7 @@ export async function generateCaption({
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`, // <-- from form
-        'HTTP-Referer': 'https://yourdomain.com', // required
+        'HTTP-Referer': 'https://traption.vercel.app', // required
         'X-Title': 'Traption',
       },
       body: JSON.stringify({
