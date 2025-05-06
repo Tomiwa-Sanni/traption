@@ -1,4 +1,3 @@
-
 interface GenerateCaptionParams {
   apiKey: string;
   platform: string | string[];
@@ -25,17 +24,17 @@ export async function generateCaption({
   audience,
   keywords,
   cta
-}: GenerateCaptionParams): Promise<string | Record<string, string>> {
+}: GenerateCaptionParams): Promise < string | Record < string, string >> {
   if (!apiKey) {
     throw new Error('API key is required');
   }
-
+  
   // Convert platforms to array if it's not already
   const platforms = Array.isArray(platform) ? platform : [platform];
-  const results: Record<string, string> = {};
-
+  const results: Record < string, string > = {};
+  
   // Function to generate a single caption
-  async function generateSingleCaption(currentPlatform: string): Promise<string> {
+  async function generateSingleCaption(currentPlatform: string): Promise < string > {
     const systemPrompt = `You are Traption, an expert social media copywriter with deep knowledge of ${currentPlatform} best practices. 
     Create a compelling ${currentPlatform} caption with these specifications:
     - Tone: ${tone}
@@ -47,7 +46,7 @@ export async function generateCaption({
     - Call to Action: ${cta || 'None specified'}
     
     Return only the caption text, no explanations or additional comments.`;
-
+    
     const userPrompt = `
     Create a ${currentPlatform} caption for the following:
     
@@ -58,11 +57,11 @@ export async function generateCaption({
     
     Make the caption appropriate for ${currentPlatform}, following its character limitations and best practices.
     `;
-
+    
     try {
       // Using a mock response since the Hugging Face API seems to be returning errors
       // This will simulate successful API responses for now
-      const mockResponses: Record<string, string> = {
+      /*const mockResponses: Record<string, string> = {
         instagram: `✨ ${description}\n\nPerfect for your ${audience || 'followers'} to enjoy! ${cta}\n\n#contentcreator #socialmedia #engagement`,
         facebook: `${description}\n\nPerfect for your ${audience || 'friends'} to enjoy! ${cta}`,
         twitter: `${description.substring(0, 200)}... ${cta} #trending`,
@@ -73,47 +72,76 @@ export async function generateCaption({
         google: `${description} | ${cta || 'Contact us today!'}`
       };
       
-      return mockResponses[currentPlatform] || `Here's a caption for ${currentPlatform}: ${description}. ${cta}`;
+      return mockResponses[currentPlatform] || `Here's a caption for ${currentPlatform}: ${description}. ${cta}`;*/
       
-      /* Commenting out the actual API call for now since it's returning errors
-      const response = await fetch('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', {
+      
+      
+      //Commenting out the actual API call for now since it's returning errors
+      /*const response = await fetch('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', {
+         method: 'POST',
+         headers: {
+           'Authorization': `Bearer ${apiKey}`,
+           'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+           inputs: userPrompt,
+           parameters: {
+             max_length: 500,
+             temperature: 0.7,
+           }
+         })
+       });
+
+       // Get response as text first
+       const text = await response.text();
+       
+       // Handle the response appropriately
+       if (text.includes('Not Found') || text.includes('Error')) {
+         throw new Error(`API Error: ${text}`);
+       }
+       
+       try {
+         // Try to parse as JSON
+         const data = JSON.parse(text);
+         return data.generated_text || 'Unable to generate caption. Please try again.';
+       } catch (jsonError) {
+         // If not valid JSON and not an error message, return the text
+         return text;
+       }*/
+      
+      const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-base', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          inputs: userPrompt,
+          inputs: `${systemPrompt}\n\n${userPrompt}`,
           parameters: {
             max_length: 500,
             temperature: 0.7,
           }
         })
       });
-
-      // Get response as text first
-      const text = await response.text();
       
-      // Handle the response appropriately
-      if (text.includes('Not Found') || text.includes('Error')) {
-        throw new Error(`API Error: ${text}`);
+      const result = await response.json();
+      
+      if (response.status !== 200 || !result || !Array.isArray(result) || !result[0]?.generated_text) {
+        throw new Error(`API Error: ${JSON.stringify(result)}`);
       }
       
-      try {
-        // Try to parse as JSON
-        const data = JSON.parse(text);
-        return data.generated_text || 'Unable to generate caption. Please try again.';
-      } catch (jsonError) {
-        // If not valid JSON and not an error message, return the text
-        return text;
-      }
-      */
+      return result[0].generated_text.trim();
+      
+      
+      
+      
+      
     } catch (error: any) {
       console.error(`Error generating caption for ${currentPlatform}:`, error);
       throw new Error(error.message || `Failed to generate caption for ${currentPlatform}`);
     }
   }
-
+  
   // Generate captions for all platforms
   for (const currentPlatform of platforms) {
     try {
@@ -122,7 +150,7 @@ export async function generateCaption({
       results[currentPlatform] = `Error: ${error.message}`;
     }
   }
-
+  
   // If only one platform was requested, return just the string for backward compatibility
   return platforms.length === 1 ? results[platforms[0]] : results;
 }
