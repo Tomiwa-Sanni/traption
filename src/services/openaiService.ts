@@ -109,11 +109,12 @@ export async function generateCaption({
          return text;
        }*/
       
+      
       const response = await fetch('https://api.deepai.org/api/text-generator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K', // This is the public free key provided by DeepAI
+          'Api-Key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K',
         },
         body: new URLSearchParams({
           text: `${systemPrompt}\n\n${userPrompt}`,
