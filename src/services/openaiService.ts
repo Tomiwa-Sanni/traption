@@ -109,7 +109,7 @@ export async function generateCaption({
          return text;
        }*/
       
-      const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-base', {
+      const response = await fetch('https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -118,7 +118,7 @@ export async function generateCaption({
         body: JSON.stringify({
           inputs: `${systemPrompt}\n\n${userPrompt}`,
           parameters: {
-            max_length: 500,
+            max_new_tokens: 150,
             temperature: 0.7,
           }
         })
