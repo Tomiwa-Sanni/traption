@@ -14,7 +14,7 @@ export function Header({ className }: HeaderProps) {
             Traption
           </h1>
           <p className="text-lg text-muted-foreground mt-2">
-            AI-Powered Social Media Caption Generator
+            AI-Powered Social Media Caption Generator Powered By Tresh Tech
           </p>
         </div>
       </div>

@@ -11,6 +11,8 @@ import { CaptionPreview } from '@/components/CaptionPreview';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
+import AdSense from "@/components/AdSense";
+
 
 const Index = () => {
   const { apiKey, hasApiKey } = useApiKey();
@@ -182,6 +184,13 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
+                  <AdSense
+                    adClient="ca-pub-6274496150668837"
+                    adSlot="9017540199"
+                    adFormat="fluid"
+                    layout="in-article"
+                    style={{ display: "block", textAlign: "center" }}
+                  />
                   {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                     <ins class="adsbygoogle"
@@ -213,6 +222,11 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
+                  <AdSense
+                    adClient="ca-pub-6274496150668837"
+                    adSlot="4144728715"
+                  />
+
                   {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                     <ins class="adsbygoogle"
@@ -257,6 +271,7 @@ const Index = () => {
                 </div>
               </div>
               
+              
               {/*<div className="ads">
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                 <ins class="adsbygoogle"
@@ -281,6 +296,11 @@ const Index = () => {
           </>
         )}
       </main>
+      
+      <AdSense
+        adClient = "ca-pub-6274496150668837"
+        adSlot = "7841265297"
+        adFormat = "autorelaxed" />
 
       <Footer />
     </div>
