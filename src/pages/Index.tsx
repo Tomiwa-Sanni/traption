@@ -182,7 +182,7 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
-                  <div className="ads">
+                  {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                     <ins class="adsbygoogle"
                          style="display:block"
@@ -193,7 +193,7 @@ const Index = () => {
                     <script>
                          (adsbygoogle = window.adsbygoogle || []).push({});
                     </script>
-                  </div>
+                  </div>*/}
 
                   <AccordionItem value="customization" className="border rounded-lg bg-card">
                     <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
@@ -213,7 +213,7 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
-                  <div className="ads">
+                  {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                     <ins class="adsbygoogle"
                          style="display:block; text-align:center;"
@@ -225,7 +225,7 @@ const Index = () => {
                          (adsbygoogle = window.adsbygoogle || []).push({});
                     </script>
 
-                  </div>
+                  </div>*/}
 
 
                   <AccordionItem value="input" className="border rounded-lg bg-card">
@@ -257,7 +257,7 @@ const Index = () => {
                 </div>
               </div>
               
-              <div className="ads">
+              {/*<div className="ads">
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                 <ins class="adsbygoogle"
                      style="display:block"
@@ -268,7 +268,8 @@ const Index = () => {
                      (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
 
-              </div>
+              </div>*/}
+              
               <div className="lg:col-span-2">
                 <CaptionPreview 
                   caption={caption} 

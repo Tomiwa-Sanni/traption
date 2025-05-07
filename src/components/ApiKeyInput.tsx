@@ -69,7 +69,7 @@ export function ApiKeyInput() {
       </CardFooter>
     </Card>
     
-    <div className="ads">
+{/*    <div className="ads">
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
       <ins class="adsbygoogle"
         style="display:block"
@@ -80,7 +80,7 @@ export function ApiKeyInput() {
       <script>
         (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
-    </div>
-    </>
+    </div>*/}
+  </>
   );
 }
