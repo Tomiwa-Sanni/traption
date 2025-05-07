@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,22 +9,23 @@ export function ApiKeyInput() {
   const { apiKey, saveApiKey, clearApiKey } = useApiKey();
   const [inputApiKey, setInputApiKey] = useState(apiKey || '');
   const [showApiKey, setShowApiKey] = useState(false);
-
+  
   const handleSave = () => {
     saveApiKey(inputApiKey);
     history.go(1)
   };
-
+  
   const handleClear = () => {
     clearApiKey();
     setInputApiKey('');
   };
-
+  
   const toggleShowApiKey = () => {
     setShowApiKey(!showApiKey);
   };
-
+  
   return (
+    <>
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -68,5 +68,19 @@ export function ApiKeyInput() {
         </Button>
       </CardFooter>
     </Card>
+    
+    <div className="ads">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-format="fluid"
+        data-ad-layout-key="-f7+5u+4t-da+6l"
+        data-ad-client="ca-pub-6274496150668837"
+        data-ad-slot="6335536534"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+    </>
   );
 }

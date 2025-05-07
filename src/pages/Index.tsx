@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption } from '@/services/openaiService';
@@ -17,7 +16,7 @@ const Index = () => {
   const { apiKey, hasApiKey } = useApiKey();
   
   // Platform state
-  const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
+  const [selectedPlatform, setSelectedPlatform] = useState < string | string[] > ('instagram');
   
   // Customization options
   const [tone, setTone] = useState('casual');
@@ -29,13 +28,13 @@ const Index = () => {
   // Input fields
   const [description, setDescription] = useState('');
   const [audience, setAudience] = useState('');
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState < string[] > ([]);
   const [cta, setCta] = useState('');
   
   // Generated caption
-  const [caption, setCaption] = useState<string | Record<string, string>>('');
+  const [caption, setCaption] = useState < string | Record < string, string >> ('');
   const [isGenerating, setIsGenerating] = useState(false);
-
+  
   // Load and save customization settings using localStorage
   useEffect(() => {
     // Load settings on initial render
@@ -108,7 +107,7 @@ const Index = () => {
     localStorage.setItem('traption_hashtags', String(includeHashtags));
     localStorage.setItem('traption_language', language);
   }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language]);
-
+  
   // Save input values whenever they change
   useEffect(() => {
     localStorage.setItem('traption_description', description);
@@ -123,13 +122,13 @@ const Index = () => {
       localStorage.setItem('traption_caption', typeof caption === 'object' ? JSON.stringify(caption) : caption);
     }
   }, [caption]);
-
+  
   const handleGenerate = async () => {
     if (!description) {
       toast.error('Please provide a post description');
       return;
     }
-
+    
     setIsGenerating(true);
     try {
       const generatedCaption = await generateCaption({
@@ -154,7 +153,7 @@ const Index = () => {
       setIsGenerating(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col pb-12 bg-gradient-to-b from-background to-secondary/20">
       <Header />
@@ -182,6 +181,19 @@ const Index = () => {
                       />
                     </AccordionContent>
                   </AccordionItem>
+                  
+                  <div className="ads">
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-6274496150668837"
+                         data-ad-slot="4144728715"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                  </div>
 
                   <AccordionItem value="customization" className="border rounded-lg bg-card">
                     <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
@@ -200,6 +212,21 @@ const Index = () => {
                       />
                     </AccordionContent>
                   </AccordionItem>
+                  
+                  <div className="ads">
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-6274496150668837"
+                         data-ad-slot="9017540199"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+
+                  </div>
+
 
                   <AccordionItem value="input" className="border rounded-lg bg-card">
                     <AccordionTrigger className="px-4">Content Details</AccordionTrigger>
@@ -229,7 +256,19 @@ const Index = () => {
                   </Button>
                 </div>
               </div>
+              
+              <div className="ads">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="autorelaxed"
+                     data-ad-client="ca-pub-6274496150668837"
+                     data-ad-slot="7841265297"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
 
+              </div>
               <div className="lg:col-span-2">
                 <CaptionPreview 
                   caption={caption} 
