@@ -12,7 +12,7 @@ export function ApiKeyInput() {
   
   const handleSave = () => {
     saveApiKey(inputApiKey);
-    history.go(1)
+    window.location.reload()
   };
   
   const handleClear = () => {
