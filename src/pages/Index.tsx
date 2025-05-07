@@ -11,7 +11,7 @@ import { CaptionPreview } from '@/components/CaptionPreview';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
-import { AdSense } from '@/components/AdSense';
+import AdSense from '@/components/AdSense';
 
 
 const Index = () => {

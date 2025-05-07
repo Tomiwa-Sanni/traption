@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useApiKey } from '@/hooks/useApiKey';
 import { Eye, EyeOff, Key, Save, Trash } from 'lucide-react';
-import { AdSense } from "@/components/AdSense";
+import AdSense from "@/components/AdSense";
 
 export function ApiKeyInput() {
   const { apiKey, saveApiKey, clearApiKey } = useApiKey();
