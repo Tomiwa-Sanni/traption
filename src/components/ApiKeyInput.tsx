@@ -69,12 +69,12 @@ export function ApiKeyInput() {
         </Button>
       </CardFooter>
     </Card>
-    <AdSense
+    {/*<AdSense
       adClient="ca-pub-6274496150668837"
       adSlot="6335536534"
       adFormat="fluid"
       layoutKey="-f7+5u+4t-da+6l"
-    />
+    />*/}
 {/*    <div className="ads">
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
       <ins class="adsbygoogle"

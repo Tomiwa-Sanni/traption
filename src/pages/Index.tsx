@@ -184,13 +184,13 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
-                  <AdSense
+                  {/*<AdSense
                     adClient="ca-pub-6274496150668837"
                     adSlot="9017540199"
                     adFormat="fluid"
                     layout="in-article"
                     style={{ display: "block", textAlign: "center" }}
-                  />
+                  />*/}
                   {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
                     <ins class="adsbygoogle"
@@ -222,10 +222,10 @@ const Index = () => {
                     </AccordionContent>
                   </AccordionItem>
                   
-                  <AdSense
+                  {/*<AdSense
                     adClient="ca-pub-6274496150668837"
                     adSlot="4144728715"
-                  />
+                  />*/}
 
                   {/*<div className="ads">
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
@@ -297,10 +297,10 @@ const Index = () => {
         )}
       </main>
       
-      <AdSense
+      {/*<AdSense
         adClient = "ca-pub-6274496150668837"
         adSlot = "7841265297"
-        adFormat = "autorelaxed" />
+        adFormat = "autorelaxed" />*/}
 
       <Footer />
     </div>
