@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -25,11 +25,13 @@ const AdSense: React.FC<AdSenseProps> = ({
   style = { display: "block" },
   className = "adsbygoogle",
   layout,
-  layoutKey
+  layoutKey,
 }) => {
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && adRef.current) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch (e) {
@@ -39,6 +41,7 @@ const AdSense: React.FC<AdSenseProps> = ({
 
   return (
     <ins
+      ref={adRef as any}
       className={className}
       style={style}
       data-ad-client={adClient}
