@@ -11,7 +11,7 @@ export function useApiKey() {
 
   // Load API key from localStorage on component mount
   useEffect(() => {
-    const storedApiKey = localStorage.getItem('huggingface_api_key');
+    const storedApiKey = localStorage.getItem('traption_api_key');
     if (storedApiKey) {
       setApiKey(storedApiKey);
     }
@@ -25,7 +25,7 @@ export function useApiKey() {
     }
     
     try {
-      localStorage.setItem('huggingface_api_key', key.trim());
+      localStorage.setItem('traption_api_key', key.trim());
       setApiKey(key.trim());
       toast.success('API key saved successfully');
       
@@ -43,7 +43,7 @@ export function useApiKey() {
 
   const clearApiKey = () => {
     try {
-      localStorage.removeItem('huggingface_api_key');
+      localStorage.removeItem('traption_api_key');
       setApiKey('');
       toast.success('API key removed');
       return true;

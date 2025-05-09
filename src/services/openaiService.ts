@@ -35,60 +35,68 @@ export async function generateCaption({
   
   // Function to generate a single caption
   async function generateSingleCaption(currentPlatform: string): Promise < string > {
-  const systemPrompt = `You are Traption, an expert social media copywriter with deep knowledge of ${currentPlatform} best practices. 
-  Create a compelling ${currentPlatform} caption with these specifications:
-  - Tone: ${tone}
-  - Style: ${style}
-  - Language: ${language}
-  - ${includeEmojis ? 'Include relevant emojis throughout the caption' : 'Do not use emojis'}
-  - ${includeHashtags ? 'Include 3-5 relevant hashtags at the end' : 'Do not include hashtags'}
-  - Target audience: ${audience || 'General audience'}
-  - Call to Action: ${cta || 'None specified'}
-  
-  Return only the caption text, no explanations or additional comments.`;
-  
-  const userPrompt = `
-  Create a ${currentPlatform} caption for the following:
-  
-  Content description: ${description}
-  ${keywords.length > 0 ? `Keywords to include: ${keywords.join(', ')}` : ''}
-  ${audience ? `Target audience: ${audience}` : ''}
-  ${cta ? `Call to action: ${cta}` : ''}
-  
-  Make the caption appropriate for ${currentPlatform}, following its character limitations and best practices.
-  `;
-  
-  try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`, // <-- from form
-        'HTTP-Referer': 'https://traption.vercel.app', // required
-        'X-Title': 'Traption',
-      },
-      body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ]
-      })
-    });
     
-    const result = await response.json();
+    const systemPrompt = `You are Traption, a professional social media copywriter with expert-level knowledge of ${currentPlatform} best practices. 
+You must follow all instructions exactly and return only the caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`;
     
-    if (!response.ok || !result.choices || !result.choices[0]?.message?.content) {
-      throw new Error(`API Error: ${JSON.stringify(result)}`);
-    }
-    
-    return result.choices[0].message.content.trim();
-  } catch (error: any) {
-    console.error(`Error generating caption for ${currentPlatform}:`, error);
-    throw new Error(error.message || `Failed to generate caption for ${currentPlatform}`);
-  }
-}
+    const userPrompt = `
+Write a highly engaging and well-structured caption for ${currentPlatform}.
 
+The caption must follow these rules:
+
+- Start with a strong hook to capture attention immediately.
+- Follow with value, insight, or emotional storytelling related to this content: ${description}
+- End with this Call to Action: ${cta || 'None specified'}.
+- Optimize for engagement, relatability, and shareability using proven practices on ${currentPlatform}.
+- Naturally include these keywords: ${keywords.length > 0 ? keywords.join(', ') : 'none'}. Do not force them—blend them into the text.
+- Follow SEO principles relevant to ${currentPlatform} captions.
+- Respect the platform’s character limits and format expectations.
+
+Additional context:
+- Tone: ${tone}
+- Style: ${style}
+- Language: ${language}
+- Target audience: ${audience || 'General audience'}
+- Include emojis: ${includeEmojis ? 'yes' : 'no'}
+- Include hashtags: ${includeHashtags ? 'yes' : 'no'}
+
+Strict rules:
+- Do not generate anything outside the specified language.
+- Do not include emojis or hashtags unless explicitly allowed above.
+- Do not explain. Return only the caption text.
+`.trim();
+    
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`, // <-- from form
+          'HTTP-Referer': 'https://traption.vercel.app', // required
+          'X-Title': 'Traption',
+        },
+        body: JSON.stringify({
+          model: 'mistralai/mistral-7b-instruct',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ]
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok || !result.choices || !result.choices[0]?.message?.content) {
+        throw new Error(`API Error: ${JSON.stringify(result)}`);
+      }
+      
+      return result.choices[0].message.content.trim();
+    } catch (error: any) {
+      console.error(`Error generating caption for ${currentPlatform}:`, error);
+      throw new Error(error.message || `Failed to generate caption for ${currentPlatform}`);
+    }
+  }
+  
   // Generate captions for all platforms
   for (const currentPlatform of platforms) {
     try {
