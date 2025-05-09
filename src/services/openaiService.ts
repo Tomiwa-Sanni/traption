@@ -1,4 +1,3 @@
-
 interface GenerateCaptionParams {
   apiKey: string;
   platform: string | string[];
@@ -11,6 +10,7 @@ interface GenerateCaptionParams {
   audience: string;
   keywords: string[];
   cta: string;
+  captionLength?: string;
 }
 
 // Create an event emitter for updating captions progressively
@@ -27,7 +27,8 @@ export async function generateCaption({
   description,
   audience,
   keywords,
-  cta
+  cta,
+  captionLength = 'medium'
 }: GenerateCaptionParams): Promise<string | Record<string, string>> {
   if (!apiKey) {
     throw new Error('API key is required');
@@ -47,7 +48,7 @@ export async function generateCaption({
 You must follow all instructions exactly and return only the caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`;
       
       const baseUserPrompt = `
-Write a highly engaging and well-structured caption for ${currentPlatform}.
+Write a highly engaging and well-structured ${captionLength || 'medium'} length caption for ${currentPlatform}.
 
 The caption must follow these rules:
 
@@ -66,6 +67,7 @@ Additional context:
 - Target audience: ${audience || 'General audience'}
 - Include emojis: ${includeEmojis ? 'yes' : 'no'}
 - Include hashtags: ${includeHashtags ? 'yes' : 'no'}
+- Caption length: ${captionLength || 'medium'}
 
 Strict rules:
 - Do not generate anything outside the specified language.
