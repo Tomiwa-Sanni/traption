@@ -5,7 +5,8 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Instagram, Twitter, Facebook, Linkedin, ArrowRight, Check } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, ArrowRight, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import { TikTok } from '@/components/icons/TikTok';
 import { WhatsApp } from '@/components/icons/WhatsApp';
 import { Pinterest } from '@/components/icons/Pinterest';
@@ -19,42 +20,6 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-indigo-600/10 to-background">
-        <div className="container">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2 space-y-6">
-              <h1 className="text-4xl md:text-5xl font-bold">
-                Create Perfect Social Media Captions with AI
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                Traption helps you generate engaging, platform-specific social media captions tailored to your audience and content.
-              </p>
-              <div className="pt-4">
-                <Link to="/generator">
-                  <Button size="lg" className="mr-4">
-                    Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="md:w-1/2 relative">
-              <div className="absolute -top-10 -left-10 w-20 h-20 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
-              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500 rounded-full opacity-20 blur-xl"></div>
-              <Card className="border-2 shadow-lg">
-                <CardContent className="p-0">
-                  <img 
-                    src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=1000"
-                    alt="Social media marketing" 
-                    className="w-full h-auto object-cover rounded-xl"
-                  />
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
       
       {/* Platforms Section */}
       <section className="py-20 bg-background">
@@ -76,8 +41,8 @@ const Home = () => {
             </Card>
             
             <Card className="flex flex-col items-center justify-center p-6 hover:border-primary/50 transition-all">
-              <Twitter className="h-10 w-10 text-platform-twitter mb-4" />
-              <h3 className="font-medium">Twitter (X)</h3>
+              <X className="h-10 w-10 text-platform-twitter mb-4" />
+              <h3 className="font-medium">X</h3>
             </Card>
             
             <Card className="flex flex-col items-center justify-center p-6 hover:border-primary/50 transition-all">

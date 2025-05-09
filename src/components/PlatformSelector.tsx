@@ -150,26 +150,15 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Select Platform(s)</h3>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="flex gap-1">
-              <Plus className="h-4 w-4" /> Add Platform
-            </Button>
+            <Button>Add Platform</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Add Custom Platform</DialogTitle>
             </DialogHeader>
-            <div className="flex items-end gap-2 mt-4">
-              <div className="flex-1">
-                <Input 
-                  placeholder="Enter platform name" 
-                  value={customPlatformName} 
-                  onChange={e => setCustomPlatformName(e.target.value)} 
-                />
-              </div>
-              <Button onClick={addCustomPlatform}>Add</Button>
-            </div>
+            <Input placeholder="Test input" />
           </DialogContent>
         </Dialog>
       </div>
