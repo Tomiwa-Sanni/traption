@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
-import { generateCaption } from '@/services/openaiService';
+import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ApiKeyInput } from '@/components/ApiKeyInput';
@@ -13,12 +14,20 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { toast } from 'sonner';
 import AdSense from '@/components/AdSense';
 
+// Interface for tracking caption generation progress
+interface CaptionProgress {
+  [platform: string]: {
+    status: 'idle' | 'started' | 'draft-completed' | 'critique-completed' | 'revision-completed' | 'completed' | 'error';
+    caption?: string;
+    error?: string;
+  };
+}
 
 const Index = () => {
   const { apiKey, hasApiKey } = useApiKey();
   
   // Platform state
-  const [selectedPlatform, setSelectedPlatform] = useState < string | string[] > ('instagram');
+  const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
   
   // Customization options
   const [tone, setTone] = useState('casual');
@@ -30,12 +39,15 @@ const Index = () => {
   // Input fields
   const [description, setDescription] = useState('');
   const [audience, setAudience] = useState('');
-  const [keywords, setKeywords] = useState < string[] > ([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [cta, setCta] = useState('');
   
   // Generated caption
-  const [caption, setCaption] = useState < string | Record < string, string >> ('');
+  const [caption, setCaption] = useState<string | Record<string, string>>('');
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Caption generation progress tracking
+  const [captionProgress, setCaptionProgress] = useState<CaptionProgress>({});
   
   // Load and save customization settings using localStorage
   useEffect(() => {
@@ -125,6 +137,49 @@ const Index = () => {
     }
   }, [caption]);
   
+  // Set up caption progress event listener
+  useEffect(() => {
+    const handleCaptionProgress = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { platform, status, caption: platformCaption, error } = customEvent.detail;
+      
+      // Update progress state
+      setCaptionProgress(prev => ({
+        ...prev,
+        [platform]: {
+          status,
+          ...(platformCaption ? { caption: platformCaption } : {}),
+          ...(error ? { error } : {})
+        }
+      }));
+      
+      // Update the main caption state when individual captions complete
+      if (status === 'completed' || status === 'error') {
+        setCaption(prev => {
+          const currentCaption = typeof prev === 'string' ? { [platform]: prev } : { ...prev };
+          
+          if (status === 'completed') {
+            currentCaption[platform] = platformCaption;
+          } else if (status === 'error') {
+            currentCaption[platform] = `Error: ${error}`;
+          }
+          
+          return Array.isArray(selectedPlatform) && selectedPlatform.length > 1
+            ? currentCaption
+            : currentCaption[platform];
+        });
+      }
+    };
+    
+    // Add event listener
+    captionProgressEmitter.addEventListener('captionProgress', handleCaptionProgress);
+    
+    // Cleanup
+    return () => {
+      captionProgressEmitter.removeEventListener('captionProgress', handleCaptionProgress);
+    };
+  }, [selectedPlatform]);
+  
   const handleGenerate = async () => {
     if (!description) {
       toast.error('Please provide a post description');
@@ -132,8 +187,20 @@ const Index = () => {
     }
     
     setIsGenerating(true);
+    
+    // Reset caption and progress states
+    setCaption('');
+    
+    // Initialize progress for each selected platform
+    const platforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
+    const initialProgress: CaptionProgress = {};
+    platforms.forEach(platform => {
+      initialProgress[platform] = { status: 'idle' };
+    });
+    setCaptionProgress(initialProgress);
+    
     try {
-      const generatedCaption = await generateCaption({
+      await generateCaption({
         apiKey,
         platform: selectedPlatform,
         tone,
@@ -146,14 +213,46 @@ const Index = () => {
         keywords,
         cta
       });
-      setCaption(generatedCaption);
-      toast.success('Caption generated successfully!');
+      
+      // Note: We're not updating caption state directly here anymore
+      // as it's handled by the captionProgress event listener
+      
+      toast.success('Caption generation complete!');
     } catch (error: any) {
       toast.error(error.message || 'Failed to generate caption');
       console.error(error);
     } finally {
       setIsGenerating(false);
     }
+  };
+  
+  // Prepare caption data for preview component, incorporating progress information
+  const getCaptionForPreview = () => {
+    if (!isGenerating || Object.keys(captionProgress).length === 0) {
+      return caption;
+    }
+    
+    // If generating, construct a caption object based on progress
+    const progressCaption: Record<string, string> = {};
+    Object.entries(captionProgress).forEach(([platform, progress]) => {
+      if (progress.status === 'idle') {
+        progressCaption[platform] = 'Waiting to start...';
+      } else if (progress.status === 'started') {
+        progressCaption[platform] = 'Creating initial draft...';
+      } else if (progress.status === 'draft-completed') {
+        progressCaption[platform] = progress.caption || 'Draft completed, critiquing...';
+      } else if (progress.status === 'critique-completed') {
+        progressCaption[platform] = 'Applying improvements based on critique...';
+      } else if (progress.status === 'revision-completed') {
+        progressCaption[platform] = progress.caption || 'Giving final polish...';
+      } else if (progress.status === 'completed') {
+        progressCaption[platform] = progress.caption || 'Caption complete!';
+      } else if (progress.status === 'error') {
+        progressCaption[platform] = `Error: ${progress.error || 'Unknown error'}`;
+      }
+    });
+    
+    return progressCaption;
   };
   
   return (
@@ -271,36 +370,17 @@ const Index = () => {
                 </div>
               </div>
               
-              
-              {/*<div className="ads">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-6274496150668837"
-                     data-ad-slot="7841265297"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-
-              </div>*/}
-              
               <div className="lg:col-span-2">
                 <CaptionPreview 
-                  caption={caption} 
+                  caption={getCaptionForPreview()} 
                   platform={selectedPlatform}
-                  isLoading={isGenerating} 
+                  isLoading={false} // Never show loading skeletons since we show progressive updates
                 />
               </div>
             </div>
           </>
         )}
       </main>
-      
-      {/*<AdSense
-        adClient = "ca-pub-6274496150668837"
-        adSlot = "7841265297"
-        adFormat = "autorelaxed" />*/}
 
       <Footer />
     </div>

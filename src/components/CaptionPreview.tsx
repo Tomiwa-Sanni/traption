@@ -74,7 +74,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
             {isMultiPlatform ? (
               <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <div className="relative">
-                  <ScrollArea className="w-full pb-2" orientation="horizontal">
+                  <ScrollArea className="w-full pb-2">
                     <TabsList className="flex mb-4 w-max">
                       {platforms.map((p) => (
                         <TabsTrigger key={p} value={p} className="flex items-center gap-2">
