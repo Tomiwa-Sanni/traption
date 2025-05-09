@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
@@ -153,7 +152,7 @@ const Index = () => {
         }
       }));
       
-      // Update the main caption state when individual captions complete
+      // Only update the main caption state when generation is complete
       if (status === 'completed' || status === 'error') {
         setCaption(prev => {
           const currentCaption = typeof prev === 'string' ? { [platform]: prev } : { ...prev };
@@ -188,7 +187,7 @@ const Index = () => {
     
     setIsGenerating(true);
     
-    // Reset caption and progress states
+    // Reset caption state
     setCaption('');
     
     // Initialize progress for each selected platform
@@ -214,9 +213,6 @@ const Index = () => {
         cta
       });
       
-      // Note: We're not updating caption state directly here anymore
-      // as it's handled by the captionProgress event listener
-      
       toast.success('Caption generation complete!');
     } catch (error: any) {
       toast.error(error.message || 'Failed to generate caption');
@@ -228,11 +224,11 @@ const Index = () => {
   
   // Prepare caption data for preview component, incorporating progress information
   const getCaptionForPreview = () => {
-    if (!isGenerating || Object.keys(captionProgress).length === 0) {
+    if (!isGenerating && Object.keys(captionProgress).length === 0) {
       return caption;
     }
     
-    // If generating, construct a caption object based on progress
+    // If generating, construct a caption object with status updates
     const progressCaption: Record<string, string> = {};
     Object.entries(captionProgress).forEach(([platform, progress]) => {
       if (progress.status === 'idle') {
@@ -240,11 +236,11 @@ const Index = () => {
       } else if (progress.status === 'started') {
         progressCaption[platform] = 'Creating initial draft...';
       } else if (progress.status === 'draft-completed') {
-        progressCaption[platform] = progress.caption || 'Draft completed, critiquing...';
+        progressCaption[platform] = 'Draft completed, critiquing...';
       } else if (progress.status === 'critique-completed') {
         progressCaption[platform] = 'Applying improvements based on critique...';
       } else if (progress.status === 'revision-completed') {
-        progressCaption[platform] = progress.caption || 'Giving final polish...';
+        progressCaption[platform] = 'Giving final polish...';
       } else if (progress.status === 'completed') {
         progressCaption[platform] = progress.caption || 'Caption complete!';
       } else if (progress.status === 'error') {

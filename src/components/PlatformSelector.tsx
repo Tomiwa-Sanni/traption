@@ -1,7 +1,8 @@
 
 import { useState } from 'react';
-import { Instagram, Facebook, Linkedin, Youtube, Search } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Search, Twitter, MessagesSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Platform {
   id: string;
@@ -87,30 +88,32 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-medium">Select Platform(s)</h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {platforms.map((platform) => (
-          <button
-            key={platform.id}
-            onClick={() => togglePlatform(platform.id)}
-            className={cn(
-              "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary",
-              selectedPlatforms.includes(platform.id)
-                ? "border-2 border-primary bg-primary/5"
-                : "border-border bg-card"
-            )}
-          >
-            <div 
+      <ScrollArea className="w-full pb-2" orientation="horizontal">
+        <div className="flex gap-2 pb-2 pr-2 min-w-max">
+          {platforms.map((platform) => (
+            <button
+              key={platform.id}
+              onClick={() => togglePlatform(platform.id)}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full text-white",
-                platform.color
+                "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary whitespace-nowrap",
+                selectedPlatforms.includes(platform.id)
+                  ? "border-2 border-primary bg-primary/5"
+                  : "border-border bg-card"
               )}
             >
-              {platform.icon}
-            </div>
-            <div className="text-sm font-medium">{platform.name}</div>
-          </button>
-        ))}
-      </div>
+              <div 
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-full text-white",
+                  platform.color
+                )}
+              >
+                {platform.icon}
+              </div>
+              <div className="text-sm font-medium">{platform.name}</div>
+            </button>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
