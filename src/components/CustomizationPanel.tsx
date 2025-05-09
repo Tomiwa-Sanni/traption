@@ -15,6 +15,8 @@ interface CustomizationPanelProps {
   setIncludeHashtags: (include: boolean) => void;
   language: string;
   setLanguage: (language: string) => void;
+  captionLength?: string;
+  setCaptionLength?: (length: string) => void;
 }
 
 export function CustomizationPanel({
@@ -28,6 +30,8 @@ export function CustomizationPanel({
   setIncludeHashtags,
   language,
   setLanguage,
+  captionLength = 'medium',
+  setCaptionLength = () => {},
 }: CustomizationPanelProps) {
   const tones = [
     { value: 'professional', label: 'Professional' },
@@ -57,6 +61,12 @@ export function CustomizationPanel({
     { value: 'Arabic', label: 'Arabic' },
     { value: 'Russian', label: 'Russian' },
     { value: 'Hindi', label: 'Hindi' },
+  ];
+
+  const captionLengths = [
+    { value: 'short', label: 'Short' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'long', label: 'Long' },
   ];
 
   return (
@@ -97,6 +107,27 @@ export function CustomizationPanel({
                 className="flex cursor-pointer items-center justify-center rounded-lg border border-border bg-card p-2 text-center text-sm peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 hover:bg-muted"
               >
                 {s.label}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
+
+      <div className="space-y-2">
+        <h3 className="text-lg font-medium">Caption Length</h3>
+        <RadioGroup value={captionLength} onValueChange={setCaptionLength} className="grid grid-cols-3 gap-2">
+          {captionLengths.map((length) => (
+            <div key={length.value}>
+              <RadioGroupItem
+                value={length.value}
+                id={`length-${length.value}`}
+                className="peer sr-only"
+              />
+              <Label
+                htmlFor={`length-${length.value}`}
+                className="flex cursor-pointer items-center justify-center rounded-lg border border-border bg-card p-2 text-center text-sm peer-data-[state=checked]:border-2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 hover:bg-muted"
+              >
+                {length.label}
               </Label>
             </div>
           ))}

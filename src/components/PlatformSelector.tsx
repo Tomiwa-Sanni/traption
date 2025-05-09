@@ -1,8 +1,11 @@
 
 import { useState } from 'react';
-import { Instagram, Facebook, Linkedin, Youtube, Search, Twitter, MessagesSquare } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Twitter, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { TikTok } from './icons/TikTok';
+import { Pinterest } from './icons/Pinterest';
+import { WhatsApp } from './icons/WhatsApp';
 
 interface Platform {
   id: string;
@@ -30,13 +33,13 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
     {
       id: 'tiktok',
       name: 'TikTok',
-      icon: <div className="text-lg font-bold">TT</div>,
+      icon: <TikTok className="h-5 w-5" />,
       color: 'bg-platform-tiktok',
     },
     {
       id: 'twitter',
       name: 'Twitter (X)',
-      icon: <div className="text-lg font-bold">X</div>,
+      icon: <Twitter className="h-5 w-5" />,
       color: 'bg-platform-twitter',
     },
     {
@@ -54,7 +57,7 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
     {
       id: 'pinterest',
       name: 'Pinterest',
-      icon: <div className="text-lg font-bold">P</div>,
+      icon: <Pinterest className="h-5 w-5" />,
       color: 'bg-platform-pinterest',
     },
     {
@@ -64,10 +67,10 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
       color: 'bg-platform-youtube',
     },
     {
-      id: 'google',
-      name: 'Google My Business',
-      icon: <Search className="h-5 w-5" />,
-      color: 'bg-platform-google',
+      id: 'whatsapp',
+      name: 'WhatsApp',
+      icon: <WhatsApp className="h-5 w-5" />,
+      color: 'bg-platform-whatsapp',
     },
   ];
 
@@ -88,32 +91,35 @@ export function PlatformSelector({ selectedPlatform, onSelectPlatform }: Platfor
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-medium">Select Platform(s)</h3>
-      <ScrollArea className="w-full pb-2" orientation="horizontal">
-        <div className="flex gap-2 pb-2 pr-2 min-w-max">
-          {platforms.map((platform) => (
-            <button
-              key={platform.id}
-              onClick={() => togglePlatform(platform.id)}
-              className={cn(
-                "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary whitespace-nowrap",
-                selectedPlatforms.includes(platform.id)
-                  ? "border-2 border-primary bg-primary/5"
-                  : "border-border bg-card"
-              )}
-            >
-              <div 
+      <div className="relative w-full">
+        <ScrollArea className="w-full pb-2">
+          <div className="flex gap-2 pb-2 pr-2 min-w-max">
+            {platforms.map((platform) => (
+              <button
+                key={platform.id}
+                onClick={() => togglePlatform(platform.id)}
                 className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full text-white",
-                  platform.color
+                  "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary whitespace-nowrap",
+                  selectedPlatforms.includes(platform.id)
+                    ? "border-2 border-primary bg-primary/5"
+                    : "border-border bg-card"
                 )}
               >
-                {platform.icon}
-              </div>
-              <div className="text-sm font-medium">{platform.name}</div>
-            </button>
-          ))}
-        </div>
-      </ScrollArea>
+                <div 
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full text-white",
+                    platform.color
+                  )}
+                >
+                  {platform.icon}
+                </div>
+                <div className="text-sm font-medium">{platform.name}</div>
+              </button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
     </div>
   );
 }

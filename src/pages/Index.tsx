@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
@@ -34,6 +35,7 @@ const Index = () => {
   const [includeEmojis, setIncludeEmojis] = useState(true);
   const [includeHashtags, setIncludeHashtags] = useState(true);
   const [language, setLanguage] = useState('English');
+  const [captionLength, setCaptionLength] = useState('medium');
   
   // Input fields
   const [description, setDescription] = useState('');
@@ -63,6 +65,7 @@ const Index = () => {
       const savedAudience = localStorage.getItem('traption_audience');
       const savedKeywords = localStorage.getItem('traption_keywords');
       const savedCta = localStorage.getItem('traption_cta');
+      const savedCaptionLength = localStorage.getItem('traption_caption_length');
       
       if (savedPlatform) {
         try {
@@ -83,6 +86,7 @@ const Index = () => {
       if (savedDescription) setDescription(savedDescription);
       if (savedAudience) setAudience(savedAudience);
       if (savedCta) setCta(savedCta);
+      if (savedCaptionLength) setCaptionLength(savedCaptionLength);
       
       if (savedKeywords) {
         try {
@@ -119,7 +123,8 @@ const Index = () => {
     localStorage.setItem('traption_emojis', String(includeEmojis));
     localStorage.setItem('traption_hashtags', String(includeHashtags));
     localStorage.setItem('traption_language', language);
-  }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language]);
+    localStorage.setItem('traption_caption_length', captionLength);
+  }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language, captionLength]);
   
   // Save input values whenever they change
   useEffect(() => {
@@ -210,7 +215,8 @@ const Index = () => {
         description,
         audience,
         keywords,
-        cta
+        cta,
+        captionLength
       });
       
       toast.success('Caption generation complete!');
@@ -278,26 +284,6 @@ const Index = () => {
                       />
                     </AccordionContent>
                   </AccordionItem>
-                  
-                  {/*<AdSense
-                    adClient="ca-pub-6274496150668837"
-                    adSlot="9017540199"
-                    adFormat="fluid"
-                    layout="in-article"
-                    style={{ display: "block", textAlign: "center" }}
-                  />*/}
-                  {/*<div className="ads">
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-6274496150668837"
-                         data-ad-slot="4144728715"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                  </div>*/}
 
                   <AccordionItem value="customization" className="border rounded-lg bg-card">
                     <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
@@ -313,29 +299,11 @@ const Index = () => {
                         setIncludeHashtags={setIncludeHashtags}
                         language={language}
                         setLanguage={setLanguage}
+                        captionLength={captionLength}
+                        setCaptionLength={setCaptionLength}
                       />
                     </AccordionContent>
                   </AccordionItem>
-                  
-                  {/*<AdSense
-                    adClient="ca-pub-6274496150668837"
-                    adSlot="4144728715"
-                  />*/}
-
-                  {/*<div className="ads">
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6274496150668837" crossorigin="anonymous"></script>
-                    <ins class="adsbygoogle"
-                         style="display:block; text-align:center;"
-                         data-ad-layout="in-article"
-                         data-ad-format="fluid"
-                         data-ad-client="ca-pub-6274496150668837"
-                         data-ad-slot="9017540199"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-
-                  </div>*/}
-
 
                   <AccordionItem value="input" className="border rounded-lg bg-card">
                     <AccordionTrigger className="px-4">Content Details</AccordionTrigger>

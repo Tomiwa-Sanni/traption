@@ -66,7 +66,7 @@ export default {
 					facebook: '#4267B2',
 					pinterest: '#E60023',
 					youtube: '#FF0000',
-					google: '#4285F4',
+					whatsapp: '#25D366',
 				},
 				tone: {
 					professional: '#0077B5',

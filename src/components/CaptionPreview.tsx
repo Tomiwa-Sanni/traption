@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Instagram, Facebook, Linkedin, Youtube, Search, Copy } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Copy, Twitter } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
+import { TikTok } from './icons/TikTok';
+import { Pinterest } from './icons/Pinterest';
+import { WhatsApp } from './icons/WhatsApp';
 
 interface CaptionPreviewProps {
   caption: string | Record<string, string>;
@@ -34,10 +37,10 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
       case 'facebook': return <Facebook className="h-5 w-5" />;
       case 'linkedin': return <Linkedin className="h-5 w-5" />;
       case 'youtube': return <Youtube className="h-5 w-5" />;
-      case 'google': return <Search className="h-5 w-5" />;
-      case 'tiktok': return <div className="text-sm font-bold">TT</div>;
-      case 'twitter': return <div className="text-sm font-bold">X</div>;
-      case 'pinterest': return <div className="text-sm font-bold">P</div>;
+      case 'whatsapp': return <WhatsApp className="h-5 w-5" />;
+      case 'tiktok': return <TikTok className="h-5 w-5" />;
+      case 'twitter': return <Twitter className="h-5 w-5" />;
+      case 'pinterest': return <Pinterest className="h-5 w-5" />;
       default: return null;
     }
   };
@@ -45,7 +48,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
   const getPlatformName = (platform: string) => {
     switch (platform) {
       case 'twitter': return 'Twitter (X)';
-      case 'google': return 'Google My Business';
+      case 'whatsapp': return 'WhatsApp';
       default: return platform.charAt(0).toUpperCase() + platform.slice(1);
     }
   };
@@ -101,8 +104,8 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
           <>
             {isMultiPlatform ? (
               <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <div className="overflow-hidden">
-                  <ScrollArea className="w-full pb-2" orientation="horizontal">
+                <div className="relative w-full">
+                  <ScrollArea className="w-full pb-2">
                     <TabsList className="inline-flex w-max mb-4">
                       {platforms.map((p) => (
                         <TabsTrigger key={p} value={p} className="flex items-center gap-2">
@@ -111,6 +114,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                         </TabsTrigger>
                       ))}
                     </TabsList>
+                    <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 </div>
                 
@@ -137,6 +141,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                             <pre className="whitespace-pre-wrap font-sans break-words">
                               {captions[p]}
                             </pre>
+                            <ScrollBar />
                           </ScrollArea>
                           <Button 
                             variant="secondary" 
@@ -177,6 +182,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                       <pre className="whitespace-pre-wrap font-sans break-words">
                         {typeof caption === 'string' ? caption : captions[platforms[0]] || ''}
                       </pre>
+                      <ScrollBar />
                     </ScrollArea>
                     {caption && (
                       <Button 
