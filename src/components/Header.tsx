@@ -105,7 +105,7 @@ export function Header({ className, minimal = false }: HeaderProps) {
           </p>
           <div className="flex justify-center">
             <Link to="/generator">
-              <Button size="lg" variant="secondary" className="text-primary hover:text-primary font-semibold">
+              <Button size="lg" variant="secondary" className="dark:text-primary text-white hover:text-primary font-semibold">
                 Get Started For Free
               </Button>
             </Link>
