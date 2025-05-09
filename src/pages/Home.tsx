@@ -188,7 +188,7 @@ const Home = () => {
             Join thousands of content creators, marketers, and businesses who use Traption to increase engagement on their social media posts.
           </p>
           <Link to="/generator">
-            <Button size="lg" variant="secondary" className="text-primary hover:text-primary">
+            <Button size="lg" variant="secondary" className="dark:text-primary text-white hover:text-primary">
               Get Started For Free
             </Button>
           </Link>
