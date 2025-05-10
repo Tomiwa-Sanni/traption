@@ -18,6 +18,10 @@ export interface CaptionParams {
 // Event emitter for updating captions progressively
 export const captionProgressEmitter = new EventTarget();
 
+/**
+ * Securely generates captions using Netlify Functions
+ * This is the recommended way to generate captions as it keeps the API key secure on the server side
+ */
 export async function generateCaption(params: CaptionParams): Promise<string | Record<string, string>> {
   const platforms = Array.isArray(params.platform) ? params.platform : [params.platform];
   const results: Record<string, string> = {};

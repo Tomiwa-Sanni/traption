@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
-import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
+import { generateCaption, captionProgressEmitter } from '@/services/apiService';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ApiKeyInput } from '@/components/ApiKeyInput';
@@ -205,7 +204,6 @@ const Index = () => {
     
     try {
       await generateCaption({
-        apiKey,
         platform: selectedPlatform,
         tone,
         style,

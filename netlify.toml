@@ -11,3 +11,6 @@
 
 [[plugins]]
 package = "@netlify/plugin-functions-install-core"
+
+# Environment variables are set in the Netlify UI under Site settings > Environment variables
+# DO NOT put actual API keys here in the netlify.toml file
