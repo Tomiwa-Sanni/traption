@@ -40,16 +40,6 @@ export async function generateCaption(params: CaptionParams): Promise<string | R
       ? '/.netlify/functions/generate-multi-caption'
       : '/.netlify/functions/generate-caption';
 
-    // Emit status updates showing the generation is in progress
-    platforms.forEach(platform => {
-      const progressEvent = new CustomEvent('captionProgress', {
-        detail: { platform, status: 'draft-completed' }
-      });
-      setTimeout(() => {
-        captionProgressEmitter.dispatchEvent(progressEvent);
-      }, 1500);
-    });
-
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -62,15 +52,8 @@ export async function generateCaption(params: CaptionParams): Promise<string | R
     });
 
     if (!response.ok) {
-      let errorMessage = 'Failed to generate caption';
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error || errorMessage;
-      } catch (e) {
-        // If response can't be parsed as JSON, use status text
-        errorMessage = `Error: ${response.status} ${response.statusText}`;
-      }
-      throw new Error(errorMessage);
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to generate caption');
     }
 
     const data = await response.json();

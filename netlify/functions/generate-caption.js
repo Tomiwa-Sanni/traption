@@ -76,31 +76,19 @@ exports.handler = async function(event, context) {
                         - Do not include emojis or hashtags unless explicitly allowed above.
                         - Do not explain. Return only the caption text.`
             }
-          ],
-          temperature: 0.7,
-          max_tokens: 500
+          ]
         })
       });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`API responded with status ${response.status}: ${errorText}`);
-        return {
-          statusCode: response.status,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ error: `API responded with status ${response.status}` })
-        };
-      }
       
       const data = await response.json();
       console.log(`Response status:`, response.status);
       
-      if (!data.choices || !data.choices[0]?.message?.content) {
-        console.error(`Error generating caption:`, data);
+      if (!response.ok || !data.choices || !data.choices[0]?.message?.content) {
+        console.error(`Error generating caption:`, data.error || "API response error");
         return {
           statusCode: 500,
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ error: "Invalid response format from API" })
+          body: JSON.stringify({ error: data.error || "Failed to generate caption" })
         };
       }
       
@@ -108,10 +96,7 @@ exports.handler = async function(event, context) {
       
       return {
         statusCode: 200,
-        headers: { 
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ caption })
       };
     } catch (error) {
@@ -126,10 +111,7 @@ exports.handler = async function(event, context) {
     console.error('General error in function:', error);
     return {
       statusCode: 500,
-      headers: { 
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*" 
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ error: error.message || "Internal Server Error" })
     };
   }

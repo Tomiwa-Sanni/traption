@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Home, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Drawer, DrawerContent, DrawerTrigger } from './ui/drawer';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 
 interface HeaderProps {
   className?: string;
@@ -14,6 +16,31 @@ interface HeaderProps {
 export function Header({ className, minimal = false }: HeaderProps) {
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const MobileMenu = () => (
+    <Drawer open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+      <DrawerContent className="h-[50vh]">
+        <div className="p-4 flex flex-col space-y-4">
+          <Link to="/" onClick={() => setIsMenuOpen(false)}>
+            <Button variant="ghost" className="w-full justify-start">
+              <Home className="w-5 h-5 mr-2" />
+              Home
+            </Button>
+          </Link>
+          <Link to="/generator" onClick={() => setIsMenuOpen(false)}>
+            <Button variant="ghost" className="w-full justify-start">
+              Generator
+            </Button>
+          </Link>
+          <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
+            <Button variant="ghost" className="w-full justify-start">
+              Contact
+            </Button>
+          </Link>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
   
   return (
     <header className={cn("py-8 bg-gradient-to-r from-purple-600 to-indigo-600", 
@@ -26,31 +53,13 @@ export function Header({ className, minimal = false }: HeaderProps) {
         </Link>
         
         {isMobile ? (
-          <div className="relative">
-            <Button variant="ghost" size="icon" className="text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-            
-            {isMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-                <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
-                    <Home className="w-5 h-5 mr-2" />
-                    Home
-                  </Button>
-                </Link>
-                <Link to="/generator" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
-                    Generator
-                  </Button>
-                </Link>
-                <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
-                    Contact
-                  </Button>
-                </Link>
-              </div>
-            )}
+          <div className="flex items-center">
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-white" onClick={() => setIsMenuOpen(true)}>
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DrawerTrigger>
+            <MobileMenu />
           </div>
         ) : (
           <div className="flex items-center space-x-4">

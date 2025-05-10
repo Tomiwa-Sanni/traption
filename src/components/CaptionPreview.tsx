@@ -33,7 +33,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
 
   // Get platform icon
   const getPlatformIcon = (platform: string) => {
-    switch (platform.toLowerCase()) {
+    switch (platform) {
       case 'instagram': return <Instagram className="h-5 w-5" />;
       case 'facebook': return <Facebook className="h-5 w-5" />;
       case 'linkedin': return <Linkedin className="h-5 w-5" />;
@@ -57,7 +57,7 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
       }
     }
     
-    switch (platform.toLowerCase()) {
+    switch (platform) {
       case 'twitter': return 'Twitter (X)';
       case 'whatsapp': return 'WhatsApp';
       default: return platform.charAt(0).toUpperCase() + platform.slice(1);
@@ -71,16 +71,13 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
 
   // Check if the caption is in "loading" state with status updates
   const isGenerating = (text: string): boolean => {
-    return text && (
-      text.startsWith('Creating') || text.startsWith('Waiting') || 
-      text.startsWith('Draft completed') || text.startsWith('Applying') || 
-      text.startsWith('Giving')
-    );
+    return text.startsWith('Creating') || text.startsWith('Waiting') || 
+           text.startsWith('Draft completed') || text.startsWith('Applying') || 
+           text.startsWith('Giving');
   };
 
   // Get progress percentage based on status text
   const getProgressValue = (text: string): number => {
-    if (!text) return 0;
     if (text.startsWith('Waiting')) return 10;
     if (text.startsWith('Creating')) return 30;
     if (text.startsWith('Draft completed')) return 50;
@@ -91,7 +88,6 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
 
   // Get status text for display
   const getStatusText = (text: string): string => {
-    if (!text) return 'Preparing...';
     if (text.startsWith('Waiting')) return 'Initializing...';
     if (text.startsWith('Creating')) return 'Creating draft...';
     if (text.startsWith('Draft completed')) return 'Critiquing draft...';

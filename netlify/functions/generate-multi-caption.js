@@ -29,8 +29,6 @@ exports.handler = async function(event, context) {
       };
     }
 
-    console.log(`Starting caption generation for platforms: ${platforms.join(', ')}`);
-    
     // Generate captions for all platforms
     const results = {};
     
@@ -81,25 +79,16 @@ exports.handler = async function(event, context) {
                           - Do not include emojis or hashtags unless explicitly allowed above.
                           - Do not explain. Return only the caption text.`
               }
-            ],
-            temperature: 0.7,
-            max_tokens: 500
+            ]
           })
         });
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`API responded with status ${response.status}: ${errorText}`);
-          results[platform] = `Error: API responded with status ${response.status}`;
-          continue;
-        }
         
         const data = await response.json();
         console.log(`Response status for ${platform}:`, response.status);
         
-        if (!data.choices || !data.choices[0]?.message?.content) {
-          console.error(`Error generating caption for ${platform}: Invalid response format`, data);
-          results[platform] = `Error: Invalid response format from API`;
+        if (!response.ok || !data.choices || !data.choices[0]?.message?.content) {
+          console.error(`Error generating caption for ${platform}:`, data.error || "API response error");
+          results[platform] = `Error: ${data.error || "Failed to generate caption"}`;
         } else {
           results[platform] = data.choices[0].message.content.trim();
         }
@@ -111,7 +100,6 @@ exports.handler = async function(event, context) {
     
     // Ensure we have some results before returning
     if (Object.keys(results).length === 0) {
-      console.error("Failed to generate any captions");
       return {
         statusCode: 500,
         headers: { "Content-Type": "application/json" },
@@ -124,8 +112,7 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(results)
     };
@@ -133,10 +120,7 @@ exports.handler = async function(event, context) {
     console.error('General error in function:', error);
     return {
       statusCode: 500,
-      headers: { 
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ error: error.message || "Internal Server Error" })
     };
   }
