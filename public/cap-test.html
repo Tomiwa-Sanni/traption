@@ -1,35 +1,86 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Test Multi-Caption</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    pre {
+      background-color: #f4f4f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    .status {
+      margin: 20px 0;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
+  <h1>Caption Generator Test</h1>
   <button id="testBtn">Test API</button>
-  <pre id="output"></pre>
+  <div class="status" id="status">Ready to test</div>
+  <pre id="output">Results will appear here...</pre>
 
   <script>
     document.getElementById('testBtn').addEventListener('click', async () => {
-      const response = await fetch('/.netlify/functions/generate-multi-caption', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          platforms: ['Instagram', 'Twitter'],
-          tone: 'Friendly',
-          style: 'Informative',
-          includeEmojis: true,
-          includeHashtags: true,
-          language: 'English',
-          description: 'Top 5 productivity hacks for busy entrepreneurs',
-          audience: 'Startup founders',
-          keywords: ['productivity', 'efficiency'],
-          cta: 'Try these tips today!',
-          captionLength: 'medium'
-        })
-      });
+      const statusEl = document.getElementById('status');
+      const outputEl = document.getElementById('output');
+      
+      statusEl.textContent = 'Sending request...';
+      outputEl.textContent = 'Waiting for response...';
+      
+      try {
+        const response = await fetch('/.netlify/functions/generate-multi-caption', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            platforms: ['Instagram', 'Twitter'],
+            tone: 'Friendly',
+            style: 'Informative',
+            includeEmojis: true,
+            includeHashtags: true,
+            language: 'English',
+            description: 'Top 5 productivity hacks for busy entrepreneurs',
+            audience: 'Startup founders',
+            keywords: ['productivity', 'efficiency'],
+            cta: 'Try these tips today!',
+            captionLength: 'medium'
+          })
+        });
 
-      const result = await response.text(); // Use .text() to see raw output
-      document.getElementById('output').textContent = result;
+        const text = await response.text();
+        statusEl.textContent = `Response received (${response.status})`;
+        
+        try {
+          // Try to parse as JSON
+          const json = JSON.parse(text);
+          outputEl.textContent = JSON.stringify(json, null, 2);
+        } catch (e) {
+          // If not valid JSON, just show the text
+          outputEl.textContent = text;
+        }
+      } catch (error) {
+        statusEl.textContent = 'Error making request';
+        outputEl.textContent = `Error: ${error.message}`;
+      }
     });
   </script>
 </body>

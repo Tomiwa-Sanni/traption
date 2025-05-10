@@ -4,7 +4,10 @@ const fetch = require('node-fetch');
 exports.handler = async function(event, context) {
   // Only allow POST requests
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return { 
+      statusCode: 405, 
+      body: JSON.stringify({ error: "Method Not Allowed" }) 
+    };
   }
 
   try {
@@ -18,8 +21,10 @@ exports.handler = async function(event, context) {
     const apiKey = process.env.OPENROUTER_API_KEY;
     
     if (!apiKey) {
+      console.error("API key not configured on server");
       return {
         statusCode: 500,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ error: "API key not configured on server" })
       };
     }
@@ -29,6 +34,7 @@ exports.handler = async function(event, context) {
     
     for (const platform of platforms) {
       try {
+        console.log(`Generating caption for ${platform}...`);
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -78,8 +84,10 @@ exports.handler = async function(event, context) {
         });
         
         const data = await response.json();
+        console.log(`Response status for ${platform}:`, response.status);
         
         if (!response.ok || !data.choices || !data.choices[0]?.message?.content) {
+          console.error(`Error generating caption for ${platform}:`, data.error || "API response error");
           results[platform] = `Error: ${data.error || "Failed to generate caption"}`;
         } else {
           results[platform] = data.choices[0].message.content.trim();
@@ -90,6 +98,17 @@ exports.handler = async function(event, context) {
       }
     }
     
+    // Ensure we have some results before returning
+    if (Object.keys(results).length === 0) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Failed to generate any captions" })
+      };
+    }
+
+    console.log("Successfully generated captions for platforms:", Object.keys(results));
+    
     return {
       statusCode: 200,
       headers: {
@@ -98,10 +117,11 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(results)
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('General error in function:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Internal Server Error" })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: error.message || "Internal Server Error" })
     };
   }
 };
