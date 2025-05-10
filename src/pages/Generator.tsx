@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { generateCaption, captionProgressEmitter } from '@/services/apiService';
 import { Header } from '@/components/Header';
