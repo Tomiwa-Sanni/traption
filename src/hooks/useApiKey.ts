@@ -1,11 +1,13 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export function useApiKey() {
-  // This hook now simply indicates the API is ready to use
-  // No actual API key handling in the frontend
+export const useApiKey = () => {
+  // Since we're using Netlify Functions with server-side API key,
+  // we just need to return that the API key is available
   return {
-    hasApiKey: true, // Always true since we're using server-side keys
-    isReady: true,   // Indicate the system is ready to use
+    apiKey: null,
+    hasApiKey: true,
+    setApiKey: () => {},
+    removeApiKey: () => {}
   };
-}
+};
