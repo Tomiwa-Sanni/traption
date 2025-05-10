@@ -23,7 +23,7 @@ interface CaptionProgress {
 }
 
 const Index = () => {
-  const { hasApiKey } = useApiKey();
+  const { apiKey, hasApiKey } = useApiKey();
   
   // Platform state
   const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
