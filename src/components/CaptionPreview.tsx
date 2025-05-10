@@ -11,7 +11,6 @@ import { Progress } from '@/components/ui/progress';
 import { TikTok } from './icons/TikTok';
 import { Pinterest } from './icons/Pinterest';
 import { WhatsApp } from './icons/WhatsApp';
-import { Loader } from '@/components/Loader';
 
 interface CaptionPreviewProps {
   caption: string | Record<string, string>;
@@ -47,16 +46,6 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
   };
 
   const getPlatformName = (platform: string) => {
-    if (platform.startsWith('custom-')) {
-      try {
-        const customPlatforms = JSON.parse(localStorage.getItem('traption_custom_platforms') || '[]');
-        const customPlatform = customPlatforms.find((p: any) => p.id === platform);
-        return customPlatform?.name || 'Custom Platform';
-      } catch (e) {
-        return 'Custom Platform';
-      }
-    }
-    
     switch (platform) {
       case 'twitter': return 'Twitter (X)';
       case 'whatsapp': return 'WhatsApp';
@@ -138,7 +127,9 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                         </div>
                       ) : isGenerating(captions[p]) ? (
                         <div className="flex flex-col items-center justify-center space-y-4 py-10">
-                          <Loader />
+                          <div className="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-10 px-4 py-2">
+                            <div className="h-5 w-5 text-primary border-t-2 border-b-2 border-primary animate-spin rounded-full"></div>
+                          </div>
                           <p className="text-sm text-center text-muted-foreground">
                             {getStatusText(captions[p])}
                           </p>
@@ -174,7 +165,9 @@ export function CaptionPreview({ caption, platform, isLoading }: CaptionPreviewP
                   </div>
                 ) : typeof caption === 'string' && isGenerating(caption) ? (
                   <div className="flex flex-col items-center justify-center space-y-4 py-10">
-                    <Loader />
+                    <div className="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-10 px-4 py-2">
+                      <div className="h-5 w-5 text-primary border-t-2 border-b-2 border-primary animate-spin rounded-full"></div>
+                    </div>
                     <p className="text-sm text-center text-muted-foreground">
                       {getStatusText(typeof caption === 'string' ? caption : '')}
                     </p>
