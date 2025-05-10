@@ -1,6 +1,7 @@
 
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
+import { addDynamicIconSelectors } from "@iconify/tailwind";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -90,5 +91,6 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
+    addDynamicIconSelectors(),
   ],
 } satisfies Config;
