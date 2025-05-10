@@ -12,7 +12,7 @@ export function ApiKeyInput() {
           Caption Generator
         </CardTitle>
         <CardDescription>
-          Our caption generator uses PuterJS to create engaging social media captions.
+          Our caption generator is ready to use! The API key is securely stored on the server.
         </CardDescription>
       </CardHeader>
       <CardContent>
