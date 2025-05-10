@@ -2,9 +2,17 @@
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
-import { Home, Menu, X } from 'lucide-react';
+import { Home, Menu, X, MessageSquare, Contact } from 'lucide-react';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  Drawer, 
+  DrawerTrigger, 
+  DrawerContent, 
+  DrawerHeader, 
+  DrawerTitle,
+  DrawerClose
+} from './ui/drawer';
 
 interface HeaderProps {
   className?: string;
@@ -13,7 +21,7 @@ interface HeaderProps {
 
 export function Header({ className, minimal = false }: HeaderProps) {
   const isMobile = useIsMobile();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   return (
     <header className={cn("py-8 bg-gradient-to-r from-purple-600 to-indigo-600", 
@@ -26,32 +34,38 @@ export function Header({ className, minimal = false }: HeaderProps) {
         </Link>
         
         {isMobile ? (
-          <div className="relative">
-            <Button variant="ghost" size="icon" className="text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-            
-            {isMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-                <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
+          <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-white">
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Menu</DrawerTitle>
+              </DrawerHeader>
+              <div className="p-4 space-y-2">
+                <Link to="/" onClick={() => setIsDrawerOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start">
                     <Home className="w-5 h-5 mr-2" />
                     Home
                   </Button>
                 </Link>
-                <Link to="/generator" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
+                <Link to="/generator" onClick={() => setIsDrawerOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <MessageSquare className="w-5 h-5 mr-2" />
                     Generator
                   </Button>
                 </Link>
-                <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start px-4">
+                <Link to="/contact" onClick={() => setIsDrawerOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <Contact className="w-5 h-5 mr-2" />
                     Contact
                   </Button>
                 </Link>
               </div>
-            )}
-          </div>
+            </DrawerContent>
+          </Drawer>
         ) : (
           <div className="flex items-center space-x-4">
             {!minimal && (
@@ -64,11 +78,13 @@ export function Header({ className, minimal = false }: HeaderProps) {
                 </Link>
                 <Link to="/generator">
                   <Button variant="ghost" className="text-white hover:bg-white/10">
+                    <MessageSquare className="w-5 h-5 mr-2" />
                     Generator
                   </Button>
                 </Link>
                 <Link to="/contact">
                   <Button variant="ghost" className="text-white hover:bg-white/10">
+                    <Contact className="w-5 h-5 mr-2" />
                     Contact
                   </Button>
                 </Link>
