@@ -216,7 +216,7 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
             key={platform.id}
             variant="outline"
             size="lg"
-            className={`flex items-center justify-start gap-2 h-auto py-3 px-4 ${
+            className={`flex items-center justify-start gap-2 h-auto py-3 px-4 overflow-hidden ${
               isPlatformSelected(platform.id)
                 ? 'border-primary/80 bg-primary/10 text-primary-foreground'
                 : ''
