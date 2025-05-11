@@ -10,7 +10,7 @@ const Features = () => {
       
       <Tabs defaultValue="platforms" className="w-full">
         <div className="relative">
-          <ScrollArea className="w-full whitespace-nowrap rounded-md pb-4" orientation="horizontal">
+          <ScrollArea className="w-full whitespace-nowrap rounded-md pb-4">
             <TabsList className="inline-flex w-max">
               <TabsTrigger value="platforms">Platforms</TabsTrigger>
               <TabsTrigger value="customization">Customization</TabsTrigger>
