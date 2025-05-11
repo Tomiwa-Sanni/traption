@@ -1,6 +1,6 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Features = () => {
   return (
@@ -8,15 +8,19 @@ const Features = () => {
       <h1 className="text-4xl font-bold mb-8 text-center">Features</h1>
       
       <Tabs defaultValue="platforms" className="w-full">
-        <TabsList className="grid grid-cols-3 md:grid-cols-5 mb-8">
-          <TabsTrigger value="platforms">Platforms</TabsTrigger>
-          <TabsTrigger value="customization">Customization</TabsTrigger>
-          <TabsTrigger value="style">Style Options</TabsTrigger>
-          <TabsTrigger value="language">Languages</TabsTrigger>
-          <TabsTrigger value="privacy">Privacy</TabsTrigger>
-        </TabsList>
+        <div className="relative">
+          <ScrollArea className="w-full whitespace-nowrap pb-4">
+            <TabsList className="inline-flex min-w-full w-max">
+              <TabsTrigger value="platforms">Platforms</TabsTrigger>
+              <TabsTrigger value="customization">Customization</TabsTrigger>
+              <TabsTrigger value="style">Style Options</TabsTrigger>
+              <TabsTrigger value="language">Languages</TabsTrigger>
+              <TabsTrigger value="privacy">Privacy</TabsTrigger>
+            </TabsList>
+          </ScrollArea>
+        </div>
         
-        <TabsContent value="platforms" className="space-y-4">
+        <TabsContent value="platforms" className="space-y-4 mt-6">
           <Card>
             <CardContent className="pt-6">
               <h2 className="text-2xl font-semibold mb-4">Multi-Platform Support</h2>

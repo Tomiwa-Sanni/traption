@@ -1,118 +1,254 @@
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+// Platform images (placeholders)
+const platforms = [
+  { name: "Instagram", color: "bg-platform-instagram text-white" },
+  { name: "Twitter/X", color: "bg-platform-twitter text-white" },
+  { name: "LinkedIn", color: "bg-platform-linkedin text-white" },
+  { name: "Facebook", color: "bg-platform-facebook text-white" },
+  { name: "TikTok", color: "bg-platform-tiktok text-white" },
+  { name: "Pinterest", color: "bg-platform-pinterest text-white" },
+  { name: "WhatsApp", color: "bg-platform-whatsapp text-white" },
+];
+
+// Testimony data
+const testimonials = [
+  {
+    name: "Sarah J.",
+    role: "Content Creator",
+    quote: "Traption has cut my caption writing time by 80%. I can now focus more on creating actual content rather than spending hours figuring out what to write.",
+  },
+  {
+    name: "Michael T.",
+    role: "Social Media Manager",
+    quote: "Managing accounts across 6 different platforms used to be a nightmare for captions. With Traption, I can generate platform-specific content in seconds.",
+  },
+  {
+    name: "Elena R.",
+    role: "Small Business Owner",
+    quote: "As someone who isn't a natural writer, Traption has been a game-changer for my business. Our engagement has increased by 45% since using these AI-generated captions.",
+  },
+  {
+    name: "David W.",
+    role: "Marketing Consultant",
+    quote: "I recommend Traption to all my clients. It's the easiest way to maintain a consistent voice while optimizing for each platform's unique requirements.",
+  },
+];
+
+// Features data
+const features = [
+  {
+    title: "Platform-Specific Optimization",
+    description: "Automatically tailors your captions for each social media platform's unique audience, character limits, and best practices."
+  },
+  {
+    title: "Multiple Tones & Styles",
+    description: "Choose from professional, casual, humorous, inspirational and more to match your brand voice."
+  },
+  {
+    title: "Hashtag Generation",
+    description: "Intelligently suggests relevant hashtags to improve discoverability for each platform."
+  },
+  {
+    title: "Multilingual Support",
+    description: "Create captions in multiple languages to reach global audiences with the same quality and messaging."
+  },
+];
 
 const Landing = () => {
+  const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState(0);
+  
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="py-20 px-4 md:px-6 lg:px-8 flex flex-col items-center text-center bg-gradient-to-b from-purple-50 to-background dark:from-purple-950/20 dark:to-background">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text mb-6">
-            Create Scroll-Stopping Captions in Seconds
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Traption is a free AI-powered caption generator that helps you create engaging captions for Instagram, Twitter, LinkedIn, TikTok, and more—complete with the right tone, hashtags, and emojis.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="px-8">
-              <Link to="/dashboard">Try It Now</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <a href="#features">Learn More</a>
-            </Button>
+      <section className="py-16 md:py-24 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text animate-gradient">
+                Create Perfect Captions for Every Platform
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto md:mx-0">
+                Generate AI-powered, platform-specific social media captions in seconds. Optimize your content for each platform without the hassle.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <Button size="lg" asChild>
+                  <Link to="/dashboard">Try it now</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/about">Learn more</Link>
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 mt-8 md:mt-0">
+              <div className="relative">
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 opacity-30 blur"></div>
+                <Card className="relative rounded-xl overflow-hidden border-0 shadow-lg">
+                  <CardContent className="p-0">
+                    <img 
+                      src="https://via.placeholder.com/600x400/EEEEEE/999999?text=AI+Caption+Generator"
+                      alt="Traption AI Caption Generator"
+                      className="w-full h-auto rounded-xl"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6">
+                      <div className="text-white">
+                        <p className="text-sm font-semibold mb-2">Generated for Instagram:</p>
+                        <p className="text-xs opacity-90">
+                          ✨ Embracing the creative journey one step at a time. What's inspiring you today? #CreativeProcess #InspirationDaily
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-16 px-4 md:px-6 lg:px-8 bg-background">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
+      
+      {/* Platform Support Section */}
+      <section className="py-16 bg-muted/50">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            One Tool. <span className="text-primary">Multiple Platforms.</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 justify-items-center">
+            {platforms.map((platform, index) => (
+              <div 
+                key={index} 
+                className={`${platform.color} rounded-xl p-4 w-full h-24 flex items-center justify-center shadow-md transition-transform hover:scale-105`}
+              >
+                <span className="font-bold">{platform.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* How It Works */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-center mb-16">How It Works</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold">1</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Multi-Platform Support</h3>
-              <p className="text-muted-foreground">Create captions tailored specifically for Instagram, Twitter, LinkedIn, TikTok, and more platforms.</p>
+              <h3 className="text-xl font-semibold mb-2">Select Your Platforms</h3>
+              <p className="text-muted-foreground">Choose which social media platforms you want to create captions for.</p>
             </div>
             
-            {/* Feature 2 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Privacy First</h3>
-              <p className="text-muted-foreground">Your API keys are stored securely in your browser and never leave your device.</p>
+              <h3 className="text-xl font-semibold mb-2">Customize Your Style</h3>
+              <p className="text-muted-foreground">Set your tone, choose whether to include hashtags, emojis, and more.</p>
             </div>
             
-            {/* Feature 3 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold">3</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Customizable Tone</h3>
-              <p className="text-muted-foreground">Choose from multiple tones to match your brand voice, from professional to casual to humorous.</p>
+              <h3 className="text-xl font-semibold mb-2">Generate & Use</h3>
+              <p className="text-muted-foreground">Click generate and get platform-optimized captions ready to copy and use.</p>
             </div>
-            
-            {/* Feature 4 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"></path>
-                  <path d="M12 8v4l3 3"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Time Saving</h3>
-              <p className="text-muted-foreground">Generate engaging captions in seconds rather than spending hours crafting the perfect message.</p>
-            </div>
-            
-            {/* Feature 5 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Smart Hashtags</h3>
-              <p className="text-muted-foreground">Automatically generate relevant hashtags that will help increase your content's visibility.</p>
-            </div>
-            
-            {/* Feature 6 */}
-            <div className="p-6 rounded-lg border bg-card hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
-                  <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
-                  <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Multiple Languages</h3>
-              <p className="text-muted-foreground">Create captions in various languages to reach a global audience with your content.</p>
-            </div>
+          </div>
+          
+          <div className="mt-16 text-center">
+            <Button size="lg" asChild>
+              <Link to="/dashboard">Get Started Now</Link>
+            </Button>
           </div>
         </div>
       </section>
-
+      
+      {/* Features Section */}
+      <section className="py-16 md:py-24 bg-muted/50">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-center mb-16">Key Features</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="h-full transition-all hover:shadow-md">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <span className="font-bold">{index + 1}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link to="/features" className="text-primary hover:underline">
+              See all features →
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Testimonials */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-center mb-16">What People Are Saying</h2>
+          
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="p-6">
+                        <blockquote className="text-muted-foreground mb-4">
+                          "{testimonial.quote}"
+                        </blockquote>
+                        <div className="font-semibold">{testimonial.name}</div>
+                        <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center gap-2 mt-8">
+              <CarouselPrevious className="static translate-y-0 mx-2" />
+              <CarouselNext className="static translate-y-0 mx-2" />
+            </div>
+          </Carousel>
+        </div>
+      </section>
+      
       {/* CTA Section */}
-      <section className="py-16 px-4 md:px-6 lg:px-8 bg-purple-50 dark:bg-purple-950/20">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Create Engaging Captions?</h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Start generating scroll-stopping captions for your social media posts in seconds.
+      <section className="py-16 md:py-24 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Social Media Content?</h2>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Start creating platform-optimized captions in seconds with Traption's AI-powered generator.
           </p>
-          <Button asChild size="lg" className="px-8">
-            <Link to="/dashboard">Get Started Now</Link>
+          <Button size="lg" variant="secondary" asChild>
+            <Link to="/dashboard">Try it for Free</Link>
           </Button>
         </div>
       </section>

@@ -46,6 +46,11 @@ export function Footer() {
                   About
                 </Link>
               </li>
+              <li>
+                <Link to="/blog" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Blog
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -54,24 +59,24 @@ export function Footer() {
             <h3 className="font-semibold mb-3">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                <Link to="/faq" className="text-muted-foreground hover:text-foreground text-sm transition">
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                <Link to="/privacy" className="text-muted-foreground hover:text-foreground text-sm transition">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                <Link to="/terms" className="text-muted-foreground hover:text-foreground text-sm transition">
                   Terms of Service
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Contact Us
+                </Link>
               </li>
             </ul>
           </div>

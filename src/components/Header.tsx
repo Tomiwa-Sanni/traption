@@ -91,10 +91,30 @@ export function Header({ className }: HeaderProps) {
                   </li>
                   <li>
                     <NavigationMenuLink asChild>
+                      <Link to="/blog" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Blog</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Check out our social media showcase
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link to="/faq" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">FAQ</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Find answers to frequently asked questions
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
                       <Link to="/contact" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                         <div className="text-sm font-medium leading-none">Contact</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          Get in touch with our team for support or questions
+                          Get in touch with our team for support
                         </p>
                       </Link>
                     </NavigationMenuLink>
@@ -142,6 +162,16 @@ export function Header({ className }: HeaderProps) {
                   <Button variant="ghost" size="sm" asChild className={cn("justify-start", isActive('/about') && "bg-accent")}>
                     <Link to="/about" className="flex items-center gap-2">
                       About
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild className={cn("justify-start", isActive('/blog') && "bg-accent")}>
+                    <Link to="/blog" className="flex items-center gap-2">
+                      Blog
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild className={cn("justify-start", isActive('/faq') && "bg-accent")}>
+                    <Link to="/faq" className="flex items-center gap-2">
+                      FAQ
                     </Link>
                   </Button>
                   <Button variant="ghost" size="sm" asChild className={cn("justify-start", isActive('/contact') && "bg-accent")}>
