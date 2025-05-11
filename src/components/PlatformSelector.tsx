@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Instagram, Facebook, Linkedin, Youtube, Twitter, Plus, Check, X } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Youtube, Twitter, Plus, Check, X, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { TikTok } from './icons/TikTok';
