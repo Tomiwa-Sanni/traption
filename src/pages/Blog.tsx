@@ -74,7 +74,7 @@ const Blog = () => {
 
   return (
     <div className="container py-12">
-      <h1 className="text-4xl font-bold mb-4 text-center">Social Media Showcase</h1>
+      <h1 className="text-4xl font-bold mb-4 text-center">Blog</h1>
       <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
         Explore our latest posts across different social media platforms, all created with Traption's AI caption generator.
       </p>
@@ -110,17 +110,6 @@ const Blog = () => {
             </CardFooter>
           </Card>
         ))}
-      </div>
-
-      <div className="mt-16 bg-muted p-6 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4">Embed Your Own Post</h2>
-        <p className="text-muted-foreground mb-6">
-          Want to showcase how Traption helped with your social media content? Paste your embed code below.
-        </p>
-        <div className="bg-background border border-border rounded-md p-8 flex items-center justify-center min-h-[300px]">
-          <p className="text-muted-foreground">Your social media embed will appear here</p>
-          {/* This is where users would paste their embed code */}
-        </div>
       </div>
     </div>
   );

@@ -76,12 +76,12 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="py-16 md:py-24 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="flex-1 text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text animate-gradient">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text animate-gradient">
                 Create Perfect Captions for Every Platform
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto md:mx-0">
+              <p className="text-lg md:text-xl text-muted-foreground mb-8">
                 Generate AI-powered, platform-specific social media captions in seconds. Optimize your content for each platform without the hassle.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">

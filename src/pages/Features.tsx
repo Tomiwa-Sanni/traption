@@ -9,15 +9,17 @@ const Features = () => {
       <h1 className="text-4xl font-bold mb-8 text-center">Features</h1>
       
       <Tabs defaultValue="platforms" className="w-full">
-        <div className="relative">
-          <ScrollArea className="w-full whitespace-nowrap rounded-md pb-4">
-            <TabsList className="inline-flex w-max">
-              <TabsTrigger value="platforms">Platforms</TabsTrigger>
-              <TabsTrigger value="customization">Customization</TabsTrigger>
-              <TabsTrigger value="style">Style Options</TabsTrigger>
-              <TabsTrigger value="language">Languages</TabsTrigger>
-              <TabsTrigger value="privacy">Privacy</TabsTrigger>
-            </TabsList>
+        <div className="relative overflow-hidden">
+          <ScrollArea className="w-full overflow-x-auto pb-4">
+            <div className="min-w-full flex justify-start p-1">
+              <TabsList className="inline-flex w-max">
+                <TabsTrigger value="platforms">Platforms</TabsTrigger>
+                <TabsTrigger value="customization">Customization</TabsTrigger>
+                <TabsTrigger value="style">Style Options</TabsTrigger>
+                <TabsTrigger value="language">Languages</TabsTrigger>
+                <TabsTrigger value="privacy">Privacy</TabsTrigger>
+              </TabsList>
+            </div>
           </ScrollArea>
         </div>
         
