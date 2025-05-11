@@ -1,271 +1,300 @@
 
 import { useState } from 'react';
-import { Instagram, Facebook, Linkedin, Youtube, Twitter, Plus, Check, X, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Check, Plus, X } from 'lucide-react';
+import { 
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { TikTok } from './icons/TikTok';
 import { Pinterest } from './icons/Pinterest';
 import { WhatsApp } from './icons/WhatsApp';
-import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { toast } from 'sonner';
 
-interface Platform {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  color: string;
-  custom?: boolean;
-}
+// Define available platforms with their icons, names, and descriptions
+const AVAILABLE_PLATFORMS = [
+  {
+    id: 'instagram',
+    name: 'Instagram',
+    description: 'Visual storytelling with emoji and hashtag options',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+        <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+      </svg>
+    ),
+  },
+  {
+    id: 'twitter',
+    name: 'Twitter/X',
+    description: 'Concise captions for optimal engagement',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+      </svg>
+    ),
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    description: 'Professional, industry-focused captions',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+        <rect width="4" height="12" x="2" y="9"></rect>
+        <circle cx="4" cy="4" r="2"></circle>
+      </svg>
+    ),
+  },
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    description: 'Conversational captions for higher reach',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+      </svg>
+    ),
+  },
+  {
+    id: 'tiktok',
+    name: 'TikTok',
+    description: 'Trendy captions with high discoverability',
+    icon: <TikTok className="h-5 w-5" />,
+  },
+  {
+    id: 'pinterest',
+    name: 'Pinterest',
+    description: 'SEO-friendly descriptions for discovery',
+    icon: <Pinterest className="h-5 w-5" />,
+  },
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    description: 'Engaging messages for direct sharing',
+    icon: <WhatsApp className="h-5 w-5" />,
+  },
+];
 
 interface PlatformSelectorProps {
   selectedPlatform: string | string[];
   onSelectPlatform: (platform: string | string[]) => void;
 }
 
-export function PlatformSelector({ selectedPlatform, onSelectPlatform }: PlatformSelectorProps) {
-  // Convert selectedPlatform to array for consistent handling
-  const selectedPlatforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
+export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: PlatformSelectorProps) => {
+  const [availablePlatforms, setAvailablePlatforms] = useState(AVAILABLE_PLATFORMS);
+  const [customPlatformName, setCustomPlatformName] = useState('');
+  const [customPlatformDesc, setCustomPlatformDesc] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
   
-  // State for custom platforms
-  const [customPlatforms, setCustomPlatforms] = useState<Platform[]>(() => {
-    // Load from localStorage
-    const savedPlatforms = localStorage.getItem('traption_custom_platforms');
-    return savedPlatforms ? JSON.parse(savedPlatforms) : [];
-  });
-
-  // Dialog states
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newPlatformName, setNewPlatformName] = useState('');
-  const [newPlatformColor, setNewPlatformColor] = useState('#6366f1');
-
-  const defaultPlatforms: Platform[] = [
-    {
-      id: 'instagram',
-      name: 'Instagram',
-      icon: <Instagram className="h-5 w-5" />,
-      color: 'bg-platform-instagram',
-    },
-    {
-      id: 'tiktok',
-      name: 'TikTok',
-      icon: <TikTok className="h-5 w-5" />,
-      color: 'bg-platform-tiktok',
-    },
-    {
-      id: 'twitter',
-      name: 'Twitter (X)',
-      icon: <Twitter className="h-5 w-5" />,
-      color: 'bg-platform-twitter',
-    },
-    {
-      id: 'linkedin',
-      name: 'LinkedIn',
-      icon: <Linkedin className="h-5 w-5" />,
-      color: 'bg-platform-linkedin',
-    },
-    {
-      id: 'facebook',
-      name: 'Facebook',
-      icon: <Facebook className="h-5 w-5" />,
-      color: 'bg-platform-facebook',
-    },
-    {
-      id: 'pinterest',
-      name: 'Pinterest',
-      icon: <Pinterest className="h-5 w-5" />,
-      color: 'bg-platform-pinterest',
-    },
-    {
-      id: 'youtube',
-      name: 'YouTube',
-      icon: <Youtube className="h-5 w-5" />,
-      color: 'bg-platform-youtube',
-    },
-    {
-      id: 'whatsapp',
-      name: 'WhatsApp',
-      icon: <WhatsApp className="h-5 w-5" />,
-      color: 'bg-platform-whatsapp',
-    },
-  ];
-
-  // Combine default and custom platforms
-  const platforms = [...defaultPlatforms, ...customPlatforms];
-
-  const togglePlatform = (platformId: string) => {
-    if (selectedPlatforms.includes(platformId)) {
-      // Remove platform if already selected (but ensure at least one platform remains selected)
-      const newSelection = selectedPlatforms.filter(id => id !== platformId);
-      if (newSelection.length > 0) {
-        onSelectPlatform(newSelection.length === 1 ? newSelection[0] : newSelection);
+  // Check if the platform is selected
+  const isPlatformSelected = (platformId: string) => {
+    if (Array.isArray(selectedPlatform)) {
+      return selectedPlatform.includes(platformId);
+    }
+    return selectedPlatform === platformId;
+  };
+  
+  // Handle platform selection
+  const handleSelectPlatform = (platformId: string) => {
+    if (Array.isArray(selectedPlatform)) {
+      if (isPlatformSelected(platformId)) {
+        // Remove from selection if already selected
+        onSelectPlatform(selectedPlatform.filter(id => id !== platformId));
+      } else {
+        // Add to selection
+        onSelectPlatform([...selectedPlatform, platformId]);
       }
     } else {
-      // Add platform to selection
-      const newSelection = [...selectedPlatforms, platformId];
-      onSelectPlatform(newSelection.length === 1 ? newSelection[0] : newSelection);
-    }
-  };
-
-  const addCustomPlatform = () => {
-    if (!newPlatformName.trim()) {
-      toast.error('Please provide a platform name');
-      return;
-    }
-
-    // Create sanitized ID from the name
-    const platformId = `custom-${newPlatformName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-    
-    // Check for duplicate IDs
-    if (platforms.some(p => p.id === platformId)) {
-      toast.error('A platform with a similar name already exists');
-      return;
-    }
-
-    const newPlatform: Platform = {
-      id: platformId,
-      name: newPlatformName,
-      icon: <User className="h-5 w-5" />,
-      color: newPlatformColor.replace('#', 'bg-[#') + ']',
-      custom: true
-    };
-
-    const updatedCustomPlatforms = [...customPlatforms, newPlatform];
-    setCustomPlatforms(updatedCustomPlatforms);
-    
-    // Save to localStorage
-    localStorage.setItem('traption_custom_platforms', JSON.stringify(updatedCustomPlatforms));
-    
-    // Reset form and close dialog
-    setNewPlatformName('');
-    setNewPlatformColor('#6366f1');
-    setIsDialogOpen(false);
-    toast.success(`${newPlatformName} platform added successfully!`);
-  };
-
-  const removeCustomPlatform = (platformId: string) => {
-    // Remove from custom platforms
-    const updatedCustomPlatforms = customPlatforms.filter(p => p.id !== platformId);
-    setCustomPlatforms(updatedCustomPlatforms);
-    
-    // Save to localStorage
-    localStorage.setItem('traption_custom_platforms', JSON.stringify(updatedCustomPlatforms));
-    
-    // If the platform was selected, remove it from selection
-    if (selectedPlatforms.includes(platformId)) {
-      const newSelection = selectedPlatforms.filter(id => id !== platformId);
-      if (newSelection.length > 0) {
-        onSelectPlatform(newSelection.length === 1 ? newSelection[0] : newSelection);
+      // Switch from single selection to multi-selection
+      if (selectedPlatform === platformId) {
+        onSelectPlatform([]);
+      } else if (selectedPlatform) {
+        onSelectPlatform([selectedPlatform, platformId]);
       } else {
-        // If no platforms are selected, default to Instagram
-        onSelectPlatform('instagram');
+        onSelectPlatform(platformId);
       }
     }
-    
-    toast.success('Platform removed successfully!');
   };
-
+  
+  // Add a custom platform
+  const handleAddCustomPlatform = () => {
+    if (!customPlatformName.trim()) return;
+    
+    const newPlatform = {
+      id: customPlatformName.toLowerCase().replace(/\s+/g, '-'),
+      name: customPlatformName.trim(),
+      description: customPlatformDesc.trim() || 'Custom platform',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      ),
+    };
+    
+    setAvailablePlatforms([...availablePlatforms, newPlatform]);
+    
+    // Select the new platform
+    if (Array.isArray(selectedPlatform)) {
+      onSelectPlatform([...selectedPlatform, newPlatform.id]);
+    } else if (selectedPlatform) {
+      onSelectPlatform([selectedPlatform, newPlatform.id]);
+    } else {
+      onSelectPlatform(newPlatform.id);
+    }
+    
+    // Reset form and close dialog
+    setCustomPlatformName('');
+    setCustomPlatformDesc('');
+    setDialogOpen(false);
+  };
+  
+  // Get the count of selected platforms
+  const selectedCount = Array.isArray(selectedPlatform) 
+    ? selectedPlatform.length 
+    : (selectedPlatform ? 1 : 0);
+  
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Select Platform(s)</h3>
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <p className="text-sm font-medium">
+          {selectedCount === 0 
+            ? 'Select platforms:' 
+            : `${selectedCount} platform${selectedCount > 1 ? 's' : ''} selected:`}
+        </p>
         
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        {/* Display selected platforms as badges */}
+        {Array.isArray(selectedPlatform) && selectedPlatform.length > 0 ? (
+          selectedPlatform.map(platformId => {
+            const platform = availablePlatforms.find(p => p.id === platformId);
+            if (!platform) return null;
+            
+            return (
+              <Badge key={platformId} variant="secondary" className="flex items-center gap-1">
+                {platform.name}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 rounded-full p-0"
+                  onClick={() => handleSelectPlatform(platformId)}
+                >
+                  <X className="h-3 w-3" />
+                  <span className="sr-only">Remove</span>
+                </Button>
+              </Badge>
+            );
+          })
+        ) : selectedPlatform ? (
+          <Badge variant="secondary" className="flex items-center gap-1">
+            {availablePlatforms.find(p => p.id === selectedPlatform)?.name}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4 rounded-full p-0"
+              onClick={() => onSelectPlatform('')}
+            >
+              <X className="h-3 w-3" />
+              <span className="sr-only">Remove</span>
+            </Button>
+          </Badge>
+        ) : null}
+      </div>
+      
+      {/* Platform grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        {availablePlatforms.map(platform => (
+          <Button
+            key={platform.id}
+            variant="outline"
+            size="lg"
+            className={`flex items-center justify-start gap-2 h-auto py-3 px-4 ${
+              isPlatformSelected(platform.id)
+                ? 'border-primary/80 bg-primary/10 text-primary-foreground'
+                : ''
+            }`}
+            onClick={() => handleSelectPlatform(platform.id)}
+          >
+            <div className="flex-shrink-0">
+              {isPlatformSelected(platform.id) ? (
+                <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                  <Check className="h-3 w-3 text-white" />
+                </div>
+              ) : (
+                platform.icon
+              )}
+            </div>
+            <div className="text-left">
+              <div className="font-medium">{platform.name}</div>
+              <p className="text-xs text-muted-foreground line-clamp-1">
+                {platform.description}
+              </p>
+            </div>
+          </Button>
+        ))}
+        
+        {/* Custom platform button */}
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="flex gap-1 items-center">
-              <Plus className="h-4 w-4" /> Add Platform
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex items-center justify-start gap-2 h-auto py-3 px-4 border-dashed"
+            >
+              <div className="flex-shrink-0">
+                <Plus className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <div className="font-medium">Custom Platform</div>
+                <p className="text-xs text-muted-foreground">
+                  Add your own platform
+                </p>
+              </div>
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add Custom Platform</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-3">
+            <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="platform-name">Platform Name</Label>
-                <Input 
-                  id="platform-name" 
-                  value={newPlatformName} 
-                  onChange={(e) => setNewPlatformName(e.target.value)}
-                  placeholder="e.g., Threads"
+                <Input
+                  id="platform-name"
+                  placeholder="e.g., YouTube, Blog, Email"
+                  value={customPlatformName}
+                  onChange={(e) => setCustomPlatformName(e.target.value)}
                 />
               </div>
-              
               <div className="space-y-2">
-                <Label htmlFor="platform-color">Brand Color</Label>
-                <div className="flex gap-3">
-                  <Input 
-                    id="platform-color" 
-                    type="color" 
-                    value={newPlatformColor}
-                    onChange={(e) => setNewPlatformColor(e.target.value)}
-                    className="w-16 h-10 p-1"
-                  />
-                  <Input 
-                    value={newPlatformColor}
-                    onChange={(e) => setNewPlatformColor(e.target.value)}
-                    placeholder="#6366f1"
-                    className="flex-1"
-                  />
-                </div>
+                <Label htmlFor="platform-desc">Description (optional)</Label>
+                <Input
+                  id="platform-desc"
+                  placeholder="Brief description of the platform"
+                  value={customPlatformDesc}
+                  onChange={(e) => setCustomPlatformDesc(e.target.value)}
+                />
               </div>
-              
-              <Button 
-                className="w-full mt-4" 
-                onClick={addCustomPlatform}
-              >
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddCustomPlatform} disabled={!customPlatformName.trim()}>
                 Add Platform
               </Button>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
-      
-      <div className="relative w-full">
-        <ScrollArea className="w-full pb-2">
-          <div className="flex gap-2 pb-2 pr-2 min-w-max">
-            {platforms.map((platform) => (
-              <button
-                key={platform.id}
-                onClick={() => togglePlatform(platform.id)}
-                className={cn(
-                  "flex items-center gap-2 rounded-lg border p-3 text-left transition-all hover:border-primary whitespace-nowrap group relative",
-                  selectedPlatforms.includes(platform.id)
-                    ? "border-2 border-primary bg-primary/5"
-                    : "border-border bg-card"
-                )}
-              >
-                <div 
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-full text-white",
-                    platform.color
-                  )}
-                >
-                  {platform.icon}
-                </div>
-                <div className="text-sm font-medium">{platform.name}</div>
-                
-                {/* Remove button for custom platforms */}
-                {platform.custom && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeCustomPlatform(platform.id);
-                    }}
-                    className="absolute -top-2 -right-2 h-5 w-5 bg-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    aria-label={`Remove ${platform.name}`}
-                  >
-                    <X className="h-3 w-3 text-white" />
-                  </button>
-                )}
-              </button>
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
     </div>
   );
-}
+};

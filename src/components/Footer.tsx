@@ -1,72 +1,161 @@
 
-import React from 'react';
-import { Button } from './ui/button';
-import { Separator } from './ui/separator';
-import { ExternalLink, Mail, Phone } from 'lucide-react';
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
+import { Separator } from "./ui/separator";
 
-export const Footer: React.FC = () => {
+export function Footer() {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="mt-12 py-8 border-t bg-secondary/20">
-      <div className="container space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand section */}
-          <div className="space-y-3">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-transparent bg-clip-text">Traption</h3>
-            <p className="text-sm text-muted-foreground">
-              AI-Powered Social Media Caption Generator by Tresh Tech.
-              Create engaging captions for all your social platforms in seconds.
+    <footer className="w-full bg-background border-t">
+      <div className="container px-4 py-8 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo and description */}
+          <div className="md:col-span-1">
+            <Link to="/" className="inline-block mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text">
+                Traption
+              </h2>
+            </Link>
+            <p className="text-muted-foreground text-sm mb-4">
+              AI-powered caption generator for social media content that helps you create engaging captions in seconds.
             </p>
           </div>
-          
-          {/* Quick links */}
-          <div className="space-y-3">
-            <h4 className="font-medium text-base">Resources</h4>
-            <div className="flex flex-col gap-2">
-              <Button variant="link" className="p-0 h-auto justify-start text-muted-foreground hover:text-foreground" asChild>
-                <a href="#features">Features</a>
-              </Button>
-              <Button variant="link" className="p-0 h-auto justify-start text-muted-foreground hover:text-foreground" asChild>
-                <a href="#tips">Tips</a>
-              </Button>
-              <Button variant="link" className="p-0 h-auto justify-start text-muted-foreground hover:text-foreground" asChild>
-                <a href="#faq">FAQ</a>
-              </Button>
-              <Button variant="link" className="p-0 h-auto justify-start text-muted-foreground hover:text-foreground" asChild>
-                <a href="https://treshtech.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                  Tresh Tech <ExternalLink className="h-3 w-3" />
-                </a>
-              </Button>
-            </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-semibold mb-3">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/features" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Features
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  About
+                </Link>
+              </li>
+            </ul>
           </div>
-          
-          {/* Contact */}
-          <div className="space-y-3">
-            <h4 className="font-medium text-base">Contact</h4>
-            <div className="flex flex-col gap-2 text-sm">
-              <a href="tel:+2349138289542" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                <Phone className="h-4 w-4" /> +234 913 828 9542
-              </a>
-              <a href="mailto:contact@treshtech.com" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                <Mail className="h-4 w-4" /> contact@treshtech.com
-              </a>
-            </div>
+
+          {/* Resources */}
+          <div>
+            <h3 className="font-semibold mb-3">Resources</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  FAQ
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Terms of Service
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact and CTA */}
+          <div>
+            <h3 className="font-semibold mb-3">Get Started</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Start generating engaging captions for your social media posts today.
+            </p>
+            <Button asChild size="sm">
+              <Link to="/dashboard">Try it now</Link>
+            </Button>
           </div>
         </div>
-        
-        <Separator className="my-4" />
-        
-        <div className="flex flex-col sm:flex-row items-center justify-between text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Tresh Tech | All Rights Reserved</p>
-          <div className="flex gap-4 mt-4 sm:mt-0">
-            <Button variant="link" size="sm" className="p-0 h-auto text-xs text-muted-foreground hover:text-foreground">
-              Privacy Policy
-            </Button>
-            <Button variant="link" size="sm" className="p-0 h-auto text-xs text-muted-foreground hover:text-foreground">
-              Terms of Service
-            </Button>
+
+        <Separator className="my-8" />
+
+        {/* Bottom footer */}
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-muted-foreground text-sm">
+            © {currentYear} Traption. All rights reserved.
+          </p>
+          <div className="flex space-x-4 mt-4 sm:mt-0">
+            <a 
+              href="#" 
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="Twitter"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+              </svg>
+            </a>
+            <a 
+              href="#" 
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="GitHub"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                <path d="M9 18c-4.51 2-5-2-7-2" />
+              </svg>
+            </a>
+            <a 
+              href="#" 
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="LinkedIn"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect width="4" height="12" x="2" y="9" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
     </footer>
   );
-};
+}
