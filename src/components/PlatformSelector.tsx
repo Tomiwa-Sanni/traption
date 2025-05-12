@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Check, Plus, X } from 'lucide-react';
@@ -88,57 +89,10 @@ interface PlatformSelectorProps {
 }
 
 export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: PlatformSelectorProps) => {
-  // Load custom platforms from localStorage on initialization
-  const loadCustomPlatforms = () => {
-    try {
-      const savedCustomPlatforms = localStorage.getItem('traption_custom_platforms');
-      if (savedCustomPlatforms) {
-        return JSON.parse(savedCustomPlatforms);
-      }
-    } catch (error) {
-      console.error('Error loading custom platforms:', error);
-    }
-    return [];
-  };
-
-  const [availablePlatforms, setAvailablePlatforms] = useState([...DEFAULT_PLATFORMS, ...loadCustomPlatforms()]);
+  const [availablePlatforms, setAvailablePlatforms] = useState([...DEFAULT_PLATFORMS]);
   const [customPlatformName, setCustomPlatformName] = useState('');
   const [customPlatformDesc, setCustomPlatformDesc] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Sync selected platforms with available platforms
-  useEffect(() => {
-    if (selectedPlatform) {
-      const platforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
-      
-      // Check if any selected platform is not in availablePlatforms
-      platforms.forEach(platformId => {
-        const platformExists = availablePlatforms.some(p => p.id === platformId);
-        
-        if (!platformExists) {
-          // Try to find this platform in localStorage custom platforms
-          const customPlatforms = loadCustomPlatforms();
-          const customPlatform = customPlatforms.find(p => p.id === platformId);
-          
-          if (customPlatform) {
-            // Add this custom platform back to available platforms
-            setAvailablePlatforms(prev => [...prev, customPlatform]);
-          }
-        }
-      });
-    }
-  }, [selectedPlatform]);
-  
-  // Save custom platforms to localStorage whenever they change
-  useEffect(() => {
-    const customPlatforms = availablePlatforms.filter(
-      platform => !DEFAULT_PLATFORMS.some(defaultP => defaultP.id === platform.id)
-    );
-    
-    if (customPlatforms.length > 0) {
-      localStorage.setItem('traption_custom_platforms', JSON.stringify(customPlatforms));
-    }
-  }, [availablePlatforms]);
   
   // Check if the platform is selected
   const isPlatformSelected = (platformId: string) => {
@@ -273,9 +227,9 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
             size="lg"
             className={`flex items-center justify-start gap-2 h-auto py-3 px-4 overflow-hidden ${
               isPlatformSelected(platform.id)
-                ? 'border-primary/80 bg-primary/10 text-primary-foreground'
+                ? 'border-primary/80 bg-primary/10 text-primary dark:text-primary-foreground'
                 : ''
-            }`}
+            } hover:text-primary focus:text-primary`}
             onClick={() => handleSelectPlatform(platform.id)}
           >
             <div className="flex-shrink-0">

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
 import { PlatformSelector } from '@/components/PlatformSelector';
@@ -9,6 +9,7 @@ import { CaptionPreview } from '@/components/CaptionPreview';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 // Interface for tracking caption generation progress
 interface CaptionProgress {
@@ -22,7 +23,7 @@ interface CaptionProgress {
 const Dashboard = () => {
   const { apiKey } = useApiKey();
   
-  // Platform state
+  // Platform state - use default value but don't load from localStorage
   const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
   
   // Customization options
@@ -46,11 +47,10 @@ const Dashboard = () => {
   // Caption generation progress tracking
   const [captionProgress, setCaptionProgress] = useState<CaptionProgress>({});
   
-  // Load and save customization settings using localStorage
+  // Load and save customization settings using localStorage - except for platform
   useEffect(() => {
     // Load settings on initial render
     const loadSettings = () => {
-      const savedPlatform = localStorage.getItem('traption_platform');
       const savedTone = localStorage.getItem('traption_tone');
       const savedStyle = localStorage.getItem('traption_style');
       const savedEmojis = localStorage.getItem('traption_emojis');
@@ -62,17 +62,6 @@ const Dashboard = () => {
       const savedKeywords = localStorage.getItem('traption_keywords');
       const savedCta = localStorage.getItem('traption_cta');
       const savedCaptionLength = localStorage.getItem('traption_caption_length');
-      
-      if (savedPlatform) {
-        try {
-          // Try to parse as JSON array first
-          const parsedPlatform = JSON.parse(savedPlatform);
-          setSelectedPlatform(parsedPlatform);
-        } catch (e) {
-          // If not JSON, treat as single string
-          setSelectedPlatform(savedPlatform);
-        }
-      }
       
       if (savedTone) setTone(savedTone);
       if (savedStyle) setStyle(savedStyle);
@@ -110,17 +99,15 @@ const Dashboard = () => {
     loadSettings();
   }, []);
   
-  // Save settings whenever they change
+  // Save settings whenever they change (except platform)
   useEffect(() => {
-    const platformToSave = Array.isArray(selectedPlatform) ? JSON.stringify(selectedPlatform) : selectedPlatform;
-    localStorage.setItem('traption_platform', platformToSave);
     localStorage.setItem('traption_tone', tone);
     localStorage.setItem('traption_style', style);
     localStorage.setItem('traption_emojis', String(includeEmojis));
     localStorage.setItem('traption_hashtags', String(includeHashtags));
     localStorage.setItem('traption_language', language);
     localStorage.setItem('traption_caption_length', captionLength);
-  }, [selectedPlatform, tone, style, includeEmojis, includeHashtags, language, captionLength]);
+  }, [tone, style, includeEmojis, includeHashtags, language, captionLength]);
   
   // Save input values whenever they change
   useEffect(() => {
