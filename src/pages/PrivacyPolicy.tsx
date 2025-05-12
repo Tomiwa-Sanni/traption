@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
           <p>
-            At Traption ("we," "our," or "us"), we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website.
+            At Traption ("we," "our," or "us"), we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website at traption.netlify.app.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">2. Information We Collect</h2>
