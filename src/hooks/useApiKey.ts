@@ -1,64 +1,21 @@
 
 import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import { useNavigate, useLocation } from 'react-router-dom';
+
+// Fixed API key for all users
+const FIXED_API_KEY = "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";
 
 export function useApiKey() {
-  const [apiKey, setApiKey] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  // Load API key from localStorage on component mount
+  // Set loading to false after component mount
   useEffect(() => {
-    const storedApiKey = localStorage.getItem('traption_api_key');
-    if (storedApiKey) {
-      setApiKey(storedApiKey);
-    }
     setIsLoading(false);
   }, []);
 
-  const saveApiKey = (key: string) => {
-    if (!key.trim()) {
-      toast.error('Please enter a valid API key');
-      return false;
-    }
-    
-    try {
-      localStorage.setItem('traption_api_key', key.trim());
-      setApiKey(key.trim());
-      toast.success('API key saved successfully');
-      
-      // Only navigate if we're not already on the home page
-      if (location.pathname !== '/') {
-        navigate('/', { replace: true });
-      }
-      return true;
-    } catch (error) {
-      console.error('Error saving API key:', error);
-      toast.error('Failed to save API key');
-      return false;
-    }
-  };
-
-  const clearApiKey = () => {
-    try {
-      localStorage.removeItem('traption_api_key');
-      setApiKey('');
-      toast.success('API key removed');
-      return true;
-    } catch (error) {
-      console.error('Error removing API key:', error);
-      toast.error('Failed to remove API key');
-      return false;
-    }
-  };
-
+  // Always return the fixed API key
   return {
-    apiKey,
+    apiKey: FIXED_API_KEY,
     isLoading,
-    saveApiKey,
-    clearApiKey,
-    hasApiKey: !!apiKey,
+    hasApiKey: true,
   };
 }

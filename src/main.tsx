@@ -12,9 +12,17 @@ try {
   }
   
   createRoot(rootElement).render(
-    <App />
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
   );
-  console.log("Application successfully initialized");
+  
+  // Remove console logs in production
+  if (process.env.NODE_ENV === 'production') {
+    console.log = () => {};
+    console.error = () => {};
+    console.warn = () => {};
+  }
 } catch (error) {
   console.error("Failed to initialize application:", error);
   

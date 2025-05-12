@@ -1,7 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
-import { ApiKeyInput } from '@/components/ApiKeyInput';
 import { PlatformSelector } from '@/components/PlatformSelector';
 import { CustomizationPanel } from '@/components/CustomizationPanel';
 import { InputFields } from '@/components/InputFields';
@@ -9,7 +9,6 @@ import { CaptionPreview } from '@/components/CaptionPreview';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
-import AdSense from '@/components/AdSense';
 
 // Interface for tracking caption generation progress
 interface CaptionProgress {
@@ -21,7 +20,7 @@ interface CaptionProgress {
 }
 
 const Dashboard = () => {
-  const { apiKey, hasApiKey } = useApiKey();
+  const { apiKey } = useApiKey();
   
   // Platform state
   const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
@@ -270,88 +269,80 @@ const Dashboard = () => {
       <main className="container space-y-6 flex-grow py-8">
         <h1 className="text-3xl font-bold mb-6">Caption Generator</h1>
         
-        {/* API Key Input */}
-        <ApiKeyInput />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-3 space-y-6">
+            <Accordion 
+              type="multiple" 
+              defaultValue={["platform", "customization", "input"]}
+              className="space-y-4"
+            >
+              <AccordionItem value="platform" className="border rounded-lg bg-card">
+                <AccordionTrigger className="px-4">Platform Selection</AccordionTrigger>
+                <AccordionContent className="px-4 pb-4">
+                  <PlatformSelector 
+                    selectedPlatform={selectedPlatform}
+                    onSelectPlatform={setSelectedPlatform}
+                  />
+                </AccordionContent>
+              </AccordionItem>
 
-        {/* Main content */}
-        {hasApiKey && (
-          <>
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              <div className="lg:col-span-3 space-y-6">
-                <Accordion 
-                  type="multiple" 
-                  defaultValue={["platform", "customization", "input"]}
-                  className="space-y-4"
-                >
-                  <AccordionItem value="platform" className="border rounded-lg bg-card">
-                    <AccordionTrigger className="px-4">Platform Selection</AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <PlatformSelector 
-                        selectedPlatform={selectedPlatform}
-                        onSelectPlatform={setSelectedPlatform}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
+              <AccordionItem value="customization" className="border rounded-lg bg-card">
+                <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
+                <AccordionContent className="px-4 pb-4">
+                  <CustomizationPanel 
+                    tone={tone}
+                    setTone={setTone}
+                    style={style}
+                    setStyle={setStyle}
+                    includeEmojis={includeEmojis}
+                    setIncludeEmojis={setIncludeEmojis}
+                    includeHashtags={includeHashtags}
+                    setIncludeHashtags={setIncludeHashtags}
+                    language={language}
+                    setLanguage={setLanguage}
+                    captionLength={captionLength}
+                    setCaptionLength={setCaptionLength}
+                  />
+                </AccordionContent>
+              </AccordionItem>
 
-                  <AccordionItem value="customization" className="border rounded-lg bg-card">
-                    <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <CustomizationPanel 
-                        tone={tone}
-                        setTone={setTone}
-                        style={style}
-                        setStyle={setStyle}
-                        includeEmojis={includeEmojis}
-                        setIncludeEmojis={setIncludeEmojis}
-                        includeHashtags={includeHashtags}
-                        setIncludeHashtags={setIncludeHashtags}
-                        language={language}
-                        setLanguage={setLanguage}
-                        captionLength={captionLength}
-                        setCaptionLength={setCaptionLength}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
+              <AccordionItem value="input" className="border rounded-lg bg-card">
+                <AccordionTrigger className="px-4">Content Details</AccordionTrigger>
+                <AccordionContent className="px-4 pb-4">
+                  <InputFields 
+                    description={description}
+                    setDescription={setDescription}
+                    audience={audience}
+                    setAudience={setAudience}
+                    keywords={keywords}
+                    setKeywords={setKeywords}
+                    cta={cta}
+                    setCta={setCta}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
 
-                  <AccordionItem value="input" className="border rounded-lg bg-card">
-                    <AccordionTrigger className="px-4">Content Details</AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <InputFields 
-                        description={description}
-                        setDescription={setDescription}
-                        audience={audience}
-                        setAudience={setAudience}
-                        keywords={keywords}
-                        setKeywords={setKeywords}
-                        cta={cta}
-                        setCta={setCta}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
-                <div className="flex justify-center">
-                  <Button 
-                    size="lg" 
-                    onClick={handleGenerate} 
-                    disabled={isGenerating || !description}
-                    className="px-8"
-                  >
-                    {isGenerating ? 'Generating...' : 'Generate Caption'}
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="lg:col-span-2">
-                <CaptionPreview 
-                  caption={getCaptionForPreview()} 
-                  platform={selectedPlatform}
-                  isLoading={false} // Never show loading skeletons since we show progressive updates
-                />
-              </div>
+            <div className="flex justify-center">
+              <Button 
+                size="lg" 
+                onClick={handleGenerate} 
+                disabled={isGenerating || !description}
+                className="px-8"
+              >
+                {isGenerating ? 'Generating...' : 'Generate Caption'}
+              </Button>
             </div>
-          </>
-        )}
+          </div>
+          
+          <div className="lg:col-span-2">
+            <CaptionPreview 
+              caption={getCaptionForPreview()} 
+              platform={selectedPlatform}
+              isLoading={false} // Never show loading skeletons since we show progressive updates
+            />
+          </div>
+        </div>
       </main>
     </div>
   );
