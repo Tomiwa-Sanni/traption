@@ -23,9 +23,6 @@ const About = () => {
           <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
           <ol className="list-decimal pl-5 space-y-4 text-muted-foreground">
             <li>
-              <strong>Enter your API key</strong> - Traption uses your own OpenAI API key to ensure privacy and give you control over your usage.
-            </li>
-            <li>
               <strong>Select your platforms</strong> - Choose which social media platforms you want to create captions for.
             </li>
             <li>
@@ -48,8 +45,7 @@ const About = () => {
             At Traption, we take your privacy seriously. That's why:
           </p>
           <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-            <li>Your API key is stored locally on your device and never sent to our servers</li>
-            <li>All caption generation happens directly between your browser and OpenAI's servers</li>
+            <li>All caption generation happens directly between your browser and OpenRouter's servers</li>
             <li>We don't track or store the content of your captions</li>
             <li>No account creation or personal information is required to use our service</li>
           </ul>
