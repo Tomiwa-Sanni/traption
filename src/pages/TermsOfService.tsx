@@ -12,7 +12,7 @@ const TermsOfService = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
           <p>
-            Welcome to Traption ("we," "our," or "us"). By accessing or using our website at traption.app, you agree to comply with and be bound by these Terms of Service. If you do not agree with these terms, please do not use Traption.
+            Welcome to Traption ("we," "our," or "us"). By accessing or using our website at traption.netlify.app, you agree to comply with and be bound by these Terms of Service. If you do not agree with these terms, please do not use Traption.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">2. Description of Service</h2>
