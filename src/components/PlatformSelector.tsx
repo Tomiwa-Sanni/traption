@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Check, Plus, X } from 'lucide-react';
@@ -18,7 +17,7 @@ import { Pinterest } from './icons/Pinterest';
 import { WhatsApp } from './icons/WhatsApp';
 
 // Define available platforms with their icons, names, and descriptions
-const AVAILABLE_PLATFORMS = [
+const DEFAULT_PLATFORMS = [
   {
     id: 'instagram',
     name: 'Instagram',
@@ -89,10 +88,57 @@ interface PlatformSelectorProps {
 }
 
 export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: PlatformSelectorProps) => {
-  const [availablePlatforms, setAvailablePlatforms] = useState(AVAILABLE_PLATFORMS);
+  // Load custom platforms from localStorage on initialization
+  const loadCustomPlatforms = () => {
+    try {
+      const savedCustomPlatforms = localStorage.getItem('traption_custom_platforms');
+      if (savedCustomPlatforms) {
+        return JSON.parse(savedCustomPlatforms);
+      }
+    } catch (error) {
+      console.error('Error loading custom platforms:', error);
+    }
+    return [];
+  };
+
+  const [availablePlatforms, setAvailablePlatforms] = useState([...DEFAULT_PLATFORMS, ...loadCustomPlatforms()]);
   const [customPlatformName, setCustomPlatformName] = useState('');
   const [customPlatformDesc, setCustomPlatformDesc] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Sync selected platforms with available platforms
+  useEffect(() => {
+    if (selectedPlatform) {
+      const platforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
+      
+      // Check if any selected platform is not in availablePlatforms
+      platforms.forEach(platformId => {
+        const platformExists = availablePlatforms.some(p => p.id === platformId);
+        
+        if (!platformExists) {
+          // Try to find this platform in localStorage custom platforms
+          const customPlatforms = loadCustomPlatforms();
+          const customPlatform = customPlatforms.find(p => p.id === platformId);
+          
+          if (customPlatform) {
+            // Add this custom platform back to available platforms
+            setAvailablePlatforms(prev => [...prev, customPlatform]);
+          }
+        }
+      });
+    }
+  }, [selectedPlatform]);
+  
+  // Save custom platforms to localStorage whenever they change
+  useEffect(() => {
+    const customPlatforms = availablePlatforms.filter(
+      platform => !DEFAULT_PLATFORMS.some(defaultP => defaultP.id === platform.id)
+    );
+    
+    if (customPlatforms.length > 0) {
+      localStorage.setItem('traption_custom_platforms', JSON.stringify(customPlatforms));
+    }
+  }, [availablePlatforms]);
   
   // Check if the platform is selected
   const isPlatformSelected = (platformId: string) => {
@@ -128,8 +174,16 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
   const handleAddCustomPlatform = () => {
     if (!customPlatformName.trim()) return;
     
+    const newPlatformId = customPlatformName.toLowerCase().replace(/\s+/g, '-');
+    
+    // Check if platform with this ID already exists
+    if (availablePlatforms.some(p => p.id === newPlatformId)) {
+      alert('A platform with a similar name already exists');
+      return;
+    }
+    
     const newPlatform = {
-      id: customPlatformName.toLowerCase().replace(/\s+/g, '-'),
+      id: newPlatformId,
       name: customPlatformName.trim(),
       description: customPlatformDesc.trim() || 'Custom platform',
       icon: (
@@ -141,7 +195,8 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
       ),
     };
     
-    setAvailablePlatforms([...availablePlatforms, newPlatform]);
+    // Update available platforms
+    setAvailablePlatforms(prev => [...prev, newPlatform]);
     
     // Select the new platform
     if (Array.isArray(selectedPlatform)) {
@@ -195,7 +250,7 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
           })
         ) : selectedPlatform ? (
           <Badge variant="secondary" className="flex items-center gap-1">
-            {availablePlatforms.find(p => p.id === selectedPlatform)?.name}
+            {availablePlatforms.find(p => p.id === selectedPlatform)?.name || selectedPlatform}
             <Button
               variant="ghost"
               size="icon"

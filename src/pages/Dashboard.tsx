@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
@@ -166,6 +165,7 @@ const Dashboard = () => {
             currentCaption[platform] = `Error: ${error}`;
           }
           
+          // Return the current caption object or just the platform caption if only one platform
           return Array.isArray(selectedPlatform) && selectedPlatform.length > 1
             ? currentCaption
             : currentCaption[platform];
@@ -187,14 +187,24 @@ const Dashboard = () => {
       toast.error('Please provide a post description');
       return;
     }
+
+    // Make sure we have selected platforms
+    const platformsToGenerate = Array.isArray(selectedPlatform) 
+      ? selectedPlatform.filter(p => p) // Filter out empty strings
+      : (selectedPlatform || 'instagram'); // Default to instagram if nothing selected
+      
+    if (Array.isArray(platformsToGenerate) && platformsToGenerate.length === 0) {
+      toast.error('Please select at least one platform');
+      return;
+    }
     
     setIsGenerating(true);
     
-    // Reset caption state
+    // Reset caption state for a clean generation
     setCaption('');
     
     // Initialize progress for each selected platform
-    const platforms = Array.isArray(selectedPlatform) ? selectedPlatform : [selectedPlatform];
+    const platforms = Array.isArray(platformsToGenerate) ? platformsToGenerate : [platformsToGenerate];
     const initialProgress: CaptionProgress = {};
     platforms.forEach(platform => {
       initialProgress[platform] = { status: 'idle' };
@@ -204,7 +214,7 @@ const Dashboard = () => {
     try {
       await generateCaption({
         apiKey,
-        platform: selectedPlatform,
+        platform: platformsToGenerate,
         tone,
         style,
         includeEmojis,
