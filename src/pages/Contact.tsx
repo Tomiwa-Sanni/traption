@@ -40,12 +40,12 @@ const Contact = () => {
   
   return (
     <div className="container max-w-4xl py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Contact Us</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text">Contact Us</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card>
+        <Card className="shadow-md">
           <CardContent className="pt-6">
-            <h2 className="text-2xl font-semibold mb-4">Get In Touch</h2>
+            <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 text-transparent bg-clip-text">Get In Touch</h2>
             <p className="text-muted-foreground mb-4">
               Have questions, feedback, or suggestions? We'd love to hear from you. Fill out the form and we'll get back to you as soon as possible.
             </p>
@@ -59,7 +59,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="font-medium">Email</p>
-                  <p className="text-muted-foreground">support@traption.app</p>
+                  <p className="text-muted-foreground">traption.contact@gmail.com</p>
                 </div>
               </div>
               
@@ -72,7 +72,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="font-medium">Location</p>
-                  <p className="text-muted-foreground">San Francisco, CA</p>
+                  <p className="text-muted-foreground">Lagos, Nigeria</p>
                 </div>
               </div>
               
@@ -85,14 +85,14 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="font-medium">Hours</p>
-                  <p className="text-muted-foreground">Mon-Fri: 9AM - 5PM PT</p>
+                  <p className="text-muted-foreground">Mon-Fri: 10AM - 5PM</p>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="shadow-md">
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -105,6 +105,7 @@ const Contact = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   required
+                  className="border-purple-100 focus:border-purple-300"
                 />
               </div>
               
@@ -119,6 +120,7 @@ const Contact = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
                   required
+                  className="border-purple-100 focus:border-purple-300"
                 />
               </div>
               
@@ -133,10 +135,11 @@ const Contact = () => {
                   placeholder="How can we help you?"
                   rows={5}
                   required
+                  className="border-purple-100 focus:border-purple-300"
                 />
               </div>
               
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700" disabled={isSubmitting}>
                 {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>

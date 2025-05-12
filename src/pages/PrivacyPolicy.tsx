@@ -8,31 +8,30 @@ const PrivacyPolicy = () => {
       
       <Card>
         <CardContent className="pt-6 prose prose-sm max-w-none dark:prose-invert">
-          <p className="text-muted-foreground">Last updated: May 11, 2025</p>
+          <p className="text-muted-foreground">Last updated: May 12, 2025</p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
           <p>
             At Traption ("we," "our," or "us"), we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website at traption.app.
           </p>
           
-          <h2 className="text-2xl font-semibold mt-8 mb-4">2. Information We Don't Collect</h2>
+          <h2 className="text-2xl font-semibold mt-8 mb-4">2. Information We Collect</h2>
           <p>
-            Traption is designed with privacy as a core principle. We do not:
+            Traption is designed with privacy as a core principle. We collect minimal information to provide our service:
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-2 mb-4 text-muted-foreground">
-            <li>Collect or store your OpenAI API key on our servers</li>
-            <li>Store the content of your captions or generation requests</li>
-            <li>Require account creation or collect personal information</li>
-            <li>Track individual user behavior or create user profiles</li>
+            <li>Caption generation preferences (stored locally in your browser)</li>
+            <li>Anonymous usage analytics to improve our service</li>
+            <li>Information you voluntarily provide through our contact form</li>
           </ul>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">3. Client-Side Storage</h2>
           <p>
-            Your OpenAI API key is stored only in your browser's local storage (localStorage) on your device. This means:
+            Your preferences are stored only in your browser's local storage (localStorage) on your device. This means:
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-2 mb-4 text-muted-foreground">
-            <li>The API key never leaves your device except to communicate directly with OpenAI</li>
-            <li>The key is stored only for your convenience so you don't need to re-enter it</li>
+            <li>Your preferences never leave your device except when generating captions</li>
+            <li>The data is stored only for your convenience so you don't need to re-enter preferences</li>
             <li>You can clear this data at any time by clearing your browser's local storage</li>
           </ul>
           
@@ -43,7 +42,7 @@ const PrivacyPolicy = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">5. Third-Party Services</h2>
           <p>
-            Traption interfaces with the OpenAI API using your provided API key. Any data sent to OpenAI is subject to their privacy policy. We recommend reviewing OpenAI's privacy policy to understand how they handle your data.
+            Traption uses AI technology to generate captions. While we handle all AI requests securely, the content you provide for caption generation is processed through our AI systems. We do not store this content after your captions are generated.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">6. Data Security</h2>
@@ -58,7 +57,7 @@ const PrivacyPolicy = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">8. Contact Us</h2>
           <p>
-            If you have questions about this Privacy Policy, please contact us through our Contact page.
+            If you have questions about this Privacy Policy, please contact us at traption.contact@gmail.com.
           </p>
         </CardContent>
       </Card>

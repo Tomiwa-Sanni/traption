@@ -12,21 +12,21 @@ const FAQ = () => {
           <AccordionItem value="item-1">
             <AccordionTrigger>How does Traption work?</AccordionTrigger>
             <AccordionContent>
-              Traption uses AI to generate platform-specific social media captions. You simply enter your OpenAI API key, describe your content, select your platforms, adjust your preferences, and our AI will generate tailored captions for each platform.
+              Traption uses advanced AI to generate platform-specific social media captions. Simply describe your content, select your platforms, adjust your preferences, and our AI will generate tailored captions for each platform. No API key required!
             </AccordionContent>
           </AccordionItem>
           
           <AccordionItem value="item-2">
             <AccordionTrigger>Do I need to create an account?</AccordionTrigger>
             <AccordionContent>
-              No! Traption is designed to work without requiring any account creation. Simply provide your own OpenAI API key and you can start generating captions immediately.
+              No! Traption is designed to work without requiring any account creation. You can start generating captions immediately with no setup.
             </AccordionContent>
           </AccordionItem>
           
           <AccordionItem value="item-3">
             <AccordionTrigger>Is my data secure?</AccordionTrigger>
             <AccordionContent>
-              Yes, Traption is built with privacy-first principles. Your API key is stored locally on your device, and all caption generation happens directly between your browser and OpenAI. We don't store your data on our servers.
+              Yes, Traption is built with privacy-first principles. We don't store your content on our servers once your session is complete. Your caption data remains private to your browser session.
             </AccordionContent>
           </AccordionItem>
           
@@ -40,7 +40,7 @@ const FAQ = () => {
           <AccordionItem value="item-5">
             <AccordionTrigger>How much does Traption cost?</AccordionTrigger>
             <AccordionContent>
-              Traption is free to use. You only pay for your OpenAI API usage, which is typically very affordable for text generation. There are no subscription fees or hidden costs.
+              Traption is free to use. There are no subscription fees, API key costs, or hidden charges.
             </AccordionContent>
           </AccordionItem>
           
@@ -54,14 +54,14 @@ const FAQ = () => {
           <AccordionItem value="item-7">
             <AccordionTrigger>What should I do if the caption generation isn't working?</AccordionTrigger>
             <AccordionContent>
-              First, ensure your OpenAI API key is valid and has sufficient credit. If issues persist, try refreshing your browser or clearing your cache. For further assistance, please contact us through our Contact page.
+              Try refreshing your browser or clearing your cache. Make sure you've provided enough detail in your content description. For further assistance, please contact us through our Contact page.
             </AccordionContent>
           </AccordionItem>
           
           <AccordionItem value="item-8">
-            <AccordionTrigger>Will Traption store my API key?</AccordionTrigger>
+            <AccordionTrigger>Do I need to provide my own API key?</AccordionTrigger>
             <AccordionContent>
-              No, your API key is stored only in your browser's local storage and is never sent to our servers. It remains on your device and is used only to communicate directly with OpenAI.
+              No, Traption now provides the AI service directly. You don't need to sign up for any external AI services or provide any API keys. Everything is included!
             </AccordionContent>
           </AccordionItem>
         </Accordion>

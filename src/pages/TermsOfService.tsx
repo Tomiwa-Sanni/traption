@@ -8,7 +8,7 @@ const TermsOfService = () => {
       
       <Card>
         <CardContent className="pt-6 prose prose-sm max-w-none dark:prose-invert">
-          <p className="text-muted-foreground">Last updated: May 11, 2025</p>
+          <p className="text-muted-foreground">Last updated: May 12, 2025</p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">1. Introduction</h2>
           <p>
@@ -17,7 +17,7 @@ const TermsOfService = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">2. Description of Service</h2>
           <p>
-            Traption is an AI-powered caption generator for social media content. The service allows users to create platform-specific captions using their own OpenAI API key. Our service is provided on an as-is basis, and we reserve the right to modify or discontinue any aspect of the service at any time.
+            Traption is an AI-powered caption generator for social media content. The service allows users to create platform-specific captions using our integrated AI technology. Our service is provided on an as-is basis, and we reserve the right to modify or discontinue any aspect of the service at any time.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">3. User Responsibilities</h2>
@@ -25,21 +25,21 @@ const TermsOfService = () => {
             By using Traption, you agree that:
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-2 mb-4 text-muted-foreground">
-            <li>You will provide your own valid OpenAI API key for caption generation</li>
             <li>You will not use the service for any illegal or unauthorized purposes</li>
             <li>You will not attempt to interfere with or disrupt the service</li>
             <li>You will not copy, distribute, or reverse engineer any part of the service</li>
-            <li>You are responsible for all content generated using your API key</li>
+            <li>You are responsible for all content you generate using our service</li>
+            <li>You will not use the service to generate harmful, deceptive, or malicious content</li>
           </ul>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">4. Privacy and Data</h2>
           <p>
-            Traption is designed with privacy in mind. We do not collect or store your OpenAI API key on our servers. Your API key is stored in your browser's local storage and is used solely to communicate with OpenAI's servers. Please refer to our Privacy Policy for more information on how we handle your data.
+            Traption is designed with privacy in mind. We store minimal data and primarily use your browser's local storage to remember your preferences. Please refer to our Privacy Policy for more information on how we handle your data.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">5. Intellectual Property</h2>
           <p>
-            All content generated through Traption using your API key belongs to you. However, Traption and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, and other intellectual property laws.
+            All content generated through Traption belongs to you. However, Traption and its original content, features, and functionality are owned by us and are protected by international copyright, trademark, and other intellectual property laws.
           </p>
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">6. Disclaimer of Warranties</h2>
@@ -59,7 +59,7 @@ const TermsOfService = () => {
           
           <h2 className="text-2xl font-semibold mt-8 mb-4">9. Contact Us</h2>
           <p>
-            If you have any questions about these Terms of Service, please contact us through our Contact page.
+            If you have any questions about these Terms of Service, please contact us at traption.contact@gmail.com.
           </p>
         </CardContent>
       </Card>

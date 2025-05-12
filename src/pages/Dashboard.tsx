@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
 import { PlatformSelector } from '@/components/PlatformSelector';
@@ -9,7 +9,13 @@ import { CaptionPreview } from '@/components/CaptionPreview';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { 
+  Sparkles, 
+  Rocket, 
+  ArrowRight, 
+  Zap 
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 // Interface for tracking caption generation progress
 interface CaptionProgress {
@@ -47,7 +53,7 @@ const Dashboard = () => {
   // Caption generation progress tracking
   const [captionProgress, setCaptionProgress] = useState<CaptionProgress>({});
   
-  // Load and save customization settings using localStorage - except for platform and caption
+  // Load customization settings using localStorage - except for platform and caption
   useEffect(() => {
     // Load settings on initial render
     const loadSettings = () => {
@@ -111,7 +117,6 @@ const Dashboard = () => {
       const customEvent = event as CustomEvent;
       const { platform, status, caption: platformCaption, error } = customEvent.detail;
       
-      // Update progress state
       setCaptionProgress(prev => ({
         ...prev,
         [platform]: {
@@ -121,7 +126,6 @@ const Dashboard = () => {
         }
       }));
       
-      // Only update the main caption state when generation is complete
       if (status === 'completed' || status === 'error') {
         setCaption(prev => {
           const currentCaption = typeof prev === 'string' ? { [platform]: prev } : { ...prev };
@@ -132,7 +136,6 @@ const Dashboard = () => {
             currentCaption[platform] = `Error: ${error}`;
           }
           
-          // Return the current caption object or just the platform caption if only one platform
           return Array.isArray(selectedPlatform) && selectedPlatform.length > 1
             ? currentCaption
             : currentCaption[platform];
@@ -140,10 +143,8 @@ const Dashboard = () => {
       }
     };
     
-    // Add event listener
     captionProgressEmitter.addEventListener('captionProgress', handleCaptionProgress);
     
-    // Cleanup
     return () => {
       captionProgressEmitter.removeEventListener('captionProgress', handleCaptionProgress);
     };
@@ -155,12 +156,10 @@ const Dashboard = () => {
       return;
     }
 
-    // Ensure at least one platform is selected (should be guaranteed by PlatformSelector now)
     const platformsToGenerate = Array.isArray(selectedPlatform) 
       ? selectedPlatform.filter(p => p)
       : (selectedPlatform || 'instagram');
       
-    // Double-check we have at least one platform
     if ((Array.isArray(platformsToGenerate) && platformsToGenerate.length === 0) || !platformsToGenerate) {
       setSelectedPlatform('instagram');
       toast.error('At least one platform must be selected. Defaulting to Instagram.');
@@ -168,11 +167,8 @@ const Dashboard = () => {
     }
     
     setIsGenerating(true);
-    
-    // Reset caption state for a clean generation
     setCaption('');
     
-    // Initialize progress for each selected platform
     const platforms = Array.isArray(platformsToGenerate) ? platformsToGenerate : [platformsToGenerate];
     const initialProgress: CaptionProgress = {};
     platforms.forEach(platform => {
@@ -205,13 +201,11 @@ const Dashboard = () => {
     }
   };
   
-  // Prepare caption data for preview component, incorporating progress information
   const getCaptionForPreview = () => {
     if (!isGenerating && Object.keys(captionProgress).length === 0) {
       return caption;
     }
     
-    // If generating, construct a caption object with status updates
     const progressCaption: Record<string, string> = {};
     Object.entries(captionProgress).forEach(([platform, progress]) => {
       if (progress.status === 'idle') {
@@ -235,9 +229,51 @@ const Dashboard = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="container space-y-6 flex-grow py-8">
-        <h1 className="text-3xl font-bold mb-6">Caption Generator</h1>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-background/95">
+      <main className="container space-y-8 flex-grow py-12">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text inline-block">
+            AI Caption Generator
+          </h1>
+          <p className="text-muted-foreground mt-2">Create engaging captions for your social media posts in seconds</p>
+        </div>
+        
+        {/* Dashboard stats cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-none dark:from-purple-950/30 dark:to-indigo-950/30">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="bg-purple-100 dark:bg-purple-900/50 p-3 rounded-full">
+                <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">AI-Powered</p>
+                <p className="text-xs text-muted-foreground">Advanced caption generation</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-none dark:from-blue-950/30 dark:to-cyan-950/30">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full">
+                <Zap className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Instant Results</p>
+                <p className="text-xs text-muted-foreground">Get captions in seconds</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-none dark:from-indigo-950/30 dark:to-purple-950/30">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="bg-indigo-100 dark:bg-indigo-900/50 p-3 rounded-full">
+                <Rocket className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Platform Optimized</p>
+                <p className="text-xs text-muted-foreground">Tailored for each network</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-3 space-y-6">
@@ -246,9 +282,13 @@ const Dashboard = () => {
               defaultValue={["platform", "customization", "input"]}
               className="space-y-4"
             >
-              <AccordionItem value="platform" className="border rounded-lg bg-card">
-                <AccordionTrigger className="px-4">Platform Selection</AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
+              <AccordionItem value="platform" className="border rounded-lg bg-card shadow-sm">
+                <AccordionTrigger className="px-4 py-3 text-lg font-medium">
+                  <span className="flex items-center gap-2">
+                    Platform Selection
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-6 animate-accordion-down">
                   <PlatformSelector 
                     selectedPlatform={selectedPlatform}
                     onSelectPlatform={setSelectedPlatform}
@@ -256,9 +296,13 @@ const Dashboard = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="customization" className="border rounded-lg bg-card">
-                <AccordionTrigger className="px-4">Caption Customization</AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
+              <AccordionItem value="customization" className="border rounded-lg bg-card shadow-sm">
+                <AccordionTrigger className="px-4 py-3 text-lg font-medium">
+                  <span className="flex items-center gap-2">
+                    Caption Customization
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-6 animate-accordion-down">
                   <CustomizationPanel 
                     tone={tone}
                     setTone={setTone}
@@ -276,9 +320,13 @@ const Dashboard = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="input" className="border rounded-lg bg-card">
-                <AccordionTrigger className="px-4">Content Details</AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
+              <AccordionItem value="input" className="border rounded-lg bg-card shadow-sm">
+                <AccordionTrigger className="px-4 py-3 text-lg font-medium">
+                  <span className="flex items-center gap-2">
+                    Content Details
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-6 animate-accordion-down">
                   <InputFields 
                     description={description}
                     setDescription={setDescription}
@@ -293,24 +341,30 @@ const Dashboard = () => {
               </AccordionItem>
             </Accordion>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-4">
               <Button 
                 size="lg" 
-                onClick={handleGenerate} 
+                onClick={handleGenerate}
                 disabled={isGenerating || !description}
-                className="px-8"
+                className="px-8 py-6 text-base font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-200"
               >
-                {isGenerating ? 'Generating...' : 'Generate Caption'}
+                {isGenerating ? 'Creating Captions...' : (
+                  <div className="flex items-center gap-2">
+                    Generate Captions <ArrowRight className="h-4 w-4 ml-1" />
+                  </div>
+                )}
               </Button>
             </div>
           </div>
           
           <div className="lg:col-span-2">
-            <CaptionPreview 
-              caption={getCaptionForPreview()} 
-              platform={selectedPlatform}
-              isLoading={false} // Never show loading skeletons since we show progressive updates
-            />
+            <div className="sticky top-24">
+              <CaptionPreview 
+                caption={getCaptionForPreview()} 
+                platform={selectedPlatform}
+                isLoading={false}
+              />
+            </div>
           </div>
         </div>
       </main>

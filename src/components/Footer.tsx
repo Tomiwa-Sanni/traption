@@ -87,7 +87,7 @@ export function Footer() {
             <p className="text-muted-foreground text-sm mb-4">
               Start generating engaging captions for your social media posts today.
             </p>
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
               <Link to="/dashboard">Try it now</Link>
             </Button>
           </div>
@@ -163,4 +163,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+};
