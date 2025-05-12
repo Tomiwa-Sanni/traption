@@ -95,7 +95,7 @@ export function Footer() {
 
         <Separator className="my-8" />
 
-        {/* Bottom footer */}
+        {/* Bottom footer
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
             © {currentYear} Traption. All rights reserved.
@@ -159,7 +159,7 @@ export function Footer() {
               </svg>
             </a>
           </div>
-        </div>
+        </div>*/}
       </div>
     </footer>
   );
