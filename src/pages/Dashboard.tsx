@@ -23,7 +23,7 @@ interface CaptionProgress {
 const Dashboard = () => {
   const { apiKey } = useApiKey();
   
-  // Platform state - use default value but don't load from localStorage
+  // Platform state - always start with 'instagram' as default
   const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
   
   // Customization options
@@ -47,7 +47,7 @@ const Dashboard = () => {
   // Caption generation progress tracking
   const [captionProgress, setCaptionProgress] = useState<CaptionProgress>({});
   
-  // Load and save customization settings using localStorage - except for platform
+  // Load and save customization settings using localStorage - except for platform and caption
   useEffect(() => {
     // Load settings on initial render
     const loadSettings = () => {
@@ -56,7 +56,6 @@ const Dashboard = () => {
       const savedEmojis = localStorage.getItem('traption_emojis');
       const savedHashtags = localStorage.getItem('traption_hashtags');
       const savedLanguage = localStorage.getItem('traption_language');
-      const savedCaption = localStorage.getItem('traption_caption');
       const savedDescription = localStorage.getItem('traption_description');
       const savedAudience = localStorage.getItem('traption_audience');
       const savedKeywords = localStorage.getItem('traption_keywords');
@@ -83,23 +82,12 @@ const Dashboard = () => {
           console.error('Error parsing keywords from localStorage:', e);
         }
       }
-      
-      if (savedCaption) {
-        try {
-          // Try to parse as JSON first (for multi-platform captions)
-          const parsedCaption = JSON.parse(savedCaption);
-          setCaption(parsedCaption);
-        } catch (e) {
-          // If not JSON, treat as single string
-          setCaption(savedCaption);
-        }
-      }
     };
     
     loadSettings();
   }, []);
   
-  // Save settings whenever they change (except platform)
+  // Save settings whenever they change (except platform and caption)
   useEffect(() => {
     localStorage.setItem('traption_tone', tone);
     localStorage.setItem('traption_style', style);
@@ -116,13 +104,6 @@ const Dashboard = () => {
     localStorage.setItem('traption_keywords', JSON.stringify(keywords));
     localStorage.setItem('traption_cta', cta);
   }, [description, audience, keywords, cta]);
-  
-  // Save caption whenever it changes
-  useEffect(() => {
-    if (caption) {
-      localStorage.setItem('traption_caption', typeof caption === 'object' ? JSON.stringify(caption) : caption);
-    }
-  }, [caption]);
   
   // Set up caption progress event listener
   useEffect(() => {
@@ -174,13 +155,15 @@ const Dashboard = () => {
       return;
     }
 
-    // Make sure we have selected platforms
+    // Ensure at least one platform is selected (should be guaranteed by PlatformSelector now)
     const platformsToGenerate = Array.isArray(selectedPlatform) 
-      ? selectedPlatform.filter(p => p) // Filter out empty strings
-      : (selectedPlatform || 'instagram'); // Default to instagram if nothing selected
+      ? selectedPlatform.filter(p => p)
+      : (selectedPlatform || 'instagram');
       
-    if (Array.isArray(platformsToGenerate) && platformsToGenerate.length === 0) {
-      toast.error('Please select at least one platform');
+    // Double-check we have at least one platform
+    if ((Array.isArray(platformsToGenerate) && platformsToGenerate.length === 0) || !platformsToGenerate) {
+      setSelectedPlatform('instagram');
+      toast.error('At least one platform must be selected. Defaulting to Instagram.');
       return;
     }
     

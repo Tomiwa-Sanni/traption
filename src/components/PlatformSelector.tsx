@@ -106,8 +106,11 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
   const handleSelectPlatform = (platformId: string) => {
     if (Array.isArray(selectedPlatform)) {
       if (isPlatformSelected(platformId)) {
-        // Remove from selection if already selected
-        onSelectPlatform(selectedPlatform.filter(id => id !== platformId));
+        // Only allow deselection if there will still be at least one platform selected
+        const updatedSelection = selectedPlatform.filter(id => id !== platformId);
+        if (updatedSelection.length > 0) {
+          onSelectPlatform(updatedSelection);
+        }
       } else {
         // Add to selection
         onSelectPlatform([...selectedPlatform, platformId]);
@@ -115,7 +118,8 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
     } else {
       // Switch from single selection to multi-selection
       if (selectedPlatform === platformId) {
-        onSelectPlatform([]);
+        // Don't allow deselecting the only selected platform
+        return;
       } else if (selectedPlatform) {
         onSelectPlatform([selectedPlatform, platformId]);
       } else {
@@ -190,30 +194,25 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
             return (
               <Badge key={platformId} variant="secondary" className="flex items-center gap-1">
                 {platform.name}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-4 w-4 rounded-full p-0"
-                  onClick={() => handleSelectPlatform(platformId)}
-                >
-                  <X className="h-3 w-3" />
-                  <span className="sr-only">Remove</span>
-                </Button>
+                {/* Only show remove button if there's more than one platform selected */}
+                {selectedPlatform.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-4 w-4 rounded-full p-0"
+                    onClick={() => handleSelectPlatform(platformId)}
+                  >
+                    <X className="h-3 w-3" />
+                    <span className="sr-only">Remove</span>
+                  </Button>
+                )}
               </Badge>
             );
           })
         ) : selectedPlatform ? (
           <Badge variant="secondary" className="flex items-center gap-1">
             {availablePlatforms.find(p => p.id === selectedPlatform)?.name || selectedPlatform}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-4 w-4 rounded-full p-0"
-              onClick={() => onSelectPlatform('')}
-            >
-              <X className="h-3 w-3" />
-              <span className="sr-only">Remove</span>
-            </Button>
+            {/* Don't show remove button for single selected platform */}
           </Badge>
         ) : null}
       </div>
@@ -227,22 +226,24 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
             size="lg"
             className={`flex items-center justify-start gap-2 h-auto py-3 px-4 overflow-hidden ${
               isPlatformSelected(platform.id)
-                ? 'border-primary/80 bg-primary/10 text-primary dark:text-primary-foreground'
+                ? 'border-primary/80 bg-primary/10 dark:text-primary-foreground'
                 : ''
-            } hover:text-primary focus:text-primary`}
+            } hover:border-primary hover:text-primary focus:text-primary`}
             onClick={() => handleSelectPlatform(platform.id)}
           >
             <div className="flex-shrink-0">
               {isPlatformSelected(platform.id) ? (
                 <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="h-3 w-3 text-white" />
+                  <Check className="h-3 w-3 text-background dark:text-primary-foreground" />
                 </div>
               ) : (
                 platform.icon
               )}
             </div>
             <div className="text-left">
-              <div className="font-medium">{platform.name}</div>
+              <div className={`font-medium ${isPlatformSelected(platform.id) ? 'text-primary dark:text-primary-foreground' : ''}`}>
+                {platform.name}
+              </div>
               <p className="text-xs text-muted-foreground line-clamp-1">
                 {platform.description}
               </p>
