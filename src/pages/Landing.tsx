@@ -98,7 +98,7 @@ const Landing = () => {
                 <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 opacity-30 blur"></div>
                 <Card className="relative rounded-xl overflow-hidden border-0 shadow-lg">
                   <CardContent className="p-0">
-                    <img 
+                    {/*<img 
                       src="https://via.placeholder.com/600x400/EEEEEE/999999?text=AI+Caption+Generator"
                       alt="Traption AI Caption Generator"
                       className="w-full h-auto rounded-xl"
@@ -109,6 +109,15 @@ const Landing = () => {
                         <p className="text-xs opacity-90">
                           ✨ Embracing the creative journey one step at a time. What's inspiring you today? #CreativeProcess #InspirationDaily
                         </p>
+                      </div>
+                    </div>*/}
+                    <div class="w-full max-w-[660px] mx-auto">
+                      <div class="relative w-full pt-[63%]">
+                        <iframe 
+                          src="https://cdn.iframe.ly/api/iframe?app=1&url=https%3A%2F%2Fwww.instagram.com%2Fp%2FDJmcFsANbnE%2F%3Figsh%3DMWFibHlzMjFlcTFoag%3D%3D&key=925108d922be940af814f71907a7df4b"
+                          class="absolute top-0 left-0 w-full h-full border-0"
+                          allowfullscreen
+                        ></iframe>
                       </div>
                     </div>
                   </CardContent>
