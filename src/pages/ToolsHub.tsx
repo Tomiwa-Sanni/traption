@@ -1,23 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PenLine, Video, MessageSquareText, Calendar, Lightbulb, Clock, Wrench, Sparkles } from 'lucide-react';
+import SearchAndFilter from '@/components/tools/SearchAndFilter';
+import ToolsGrid from '@/components/tools/ToolsGrid';
+import { toolsData } from '@/data/toolsData';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-
-interface Tool {
-  id: string;
-  name: string;
-  description: string;
-  path: string;
-  icon: JSX.Element;
-  category: string;
-}
 
 const ToolsHub = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,74 +39,8 @@ const ToolsHub = () => {
     };
   }, [navigate]);
 
-  const tools: Tool[] = [
-    {
-      id: 'caption-generator',
-      name: 'Caption Generator',
-      description: 'Create platform-optimized captions for all your social media posts in seconds.',
-      path: '/tools/caption-generator',
-      icon: <PenLine className="h-5 w-5" />,
-      category: 'content'
-    },
-    {
-      id: 'hooks-generator',
-      name: 'Hooks & Headlines',
-      description: 'Craft attention-grabbing hooks and headlines that stop the scroll and drive engagement.',
-      path: '/tools/hooks-generator',
-      icon: <Sparkles className="h-5 w-5" />,
-      category: 'content'
-    },
-    {
-      id: 'video-scripts',
-      name: 'Video Script Writer',
-      description: 'Generate engaging scripts for TikTok, Reels, YouTube Shorts and other short-form video content.',
-      path: '/tools/video-scripts',
-      icon: <Video className="h-5 w-5" />,
-      category: 'video'
-    },
-    {
-      id: 'comment-assistant',
-      name: 'Comment Response Assistant',
-      description: 'Generate thoughtful responses to comments based on your brand voice and tone.',
-      path: '/tools/comment-assistant',
-      icon: <MessageSquareText className="h-5 w-5" />,
-      category: 'engagement'
-    },
-    {
-      id: 'content-calendar',
-      name: 'Content Calendar & Planner',
-      description: 'Organize and plan your content schedule with a visual calendar and content strategy tools.',
-      path: '/tools/content-calendar',
-      icon: <Calendar className="h-5 w-5" />,
-      category: 'planning'
-    },
-    {
-      id: 'video-ideas',
-      name: 'Video Ideas Generator',
-      description: 'Get fresh content ideas for your videos based on your niche, trends, and audience interests.',
-      path: '/tools/video-ideas',
-      icon: <Lightbulb className="h-5 w-5" />,
-      category: 'ideation'
-    },
-    {
-      id: 'resources-ai',
-      name: 'Resources AI',
-      description: 'Discover the best tools and resources for your content creation needs with AI recommendations.',
-      path: '/tools/resources-ai',
-      icon: <Wrench className="h-5 w-5" />,
-      category: 'resources'
-    },
-    {
-      id: 'post-scheduler',
-      name: 'Post Timer & Scheduler',
-      description: 'Set up your posting schedule and get reminders when it's time to post your content.',
-      path: '/tools/post-scheduler',
-      icon: <Clock className="h-5 w-5" />,
-      category: 'planning'
-    }
-  ];
-
-  const filteredTools = tools
+  // Filter tools based on search term and selected category
+  const filteredTools = toolsData
     .filter(tool => 
       tool.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       tool.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -159,54 +82,18 @@ const ToolsHub = () => {
         </div>
 
         {/* Search and filter */}
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
-          <Input
-            placeholder="Search tools..."
-            className="max-w-md"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="video">Video</TabsTrigger>
-              <TabsTrigger value="engagement">Engagement</TabsTrigger>
-              <TabsTrigger value="planning">Planning</TabsTrigger>
-              <TabsTrigger value="ideation">Ideation</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+        <SearchAndFilter 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredTools.map((tool) => (
-            <Link 
-              key={tool.id} 
-              to={tool.path}
-              onClick={() => trackToolClick(tool.id)}
-            >
-              <Card className="h-full hover:shadow-md transition-all">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      {tool.icon}
-                    </div>
-                    <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded-full capitalize">
-                      {tool.category}
-                    </span>
-                  </div>
-                  <CardTitle className="mt-2">{tool.name}</CardTitle>
-                  <CardDescription>{tool.description}</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Button className="w-full" size="sm">Launch Tool</Button>
-                </CardFooter>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {/* Tools grid */}
+        <ToolsGrid 
+          tools={filteredTools} 
+          onToolClick={trackToolClick} 
+        />
       </div>
     </MainLayout>
   );
