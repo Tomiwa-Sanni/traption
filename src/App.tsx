@@ -3,11 +3,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { StrictMode } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { StrictMode, useEffect, useState } from "react";
 import MainLayout from "./layouts/MainLayout";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import ToolsHub from "./pages/ToolsHub";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
+import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
@@ -17,6 +21,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Blog from "./pages/Blog";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { supabase } from "@/integrations/supabase/client";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,32 +33,130 @@ const queryClient = new QueryClient({
   },
 });
 
+// Auth route wrapper
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      setAuthenticated(!!data.session);
+      setLoading(false);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setAuthenticated(!!session);
+        setLoading(false);
+      }
+    );
+
+    checkAuth();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="container flex items-center justify-center min-h-[60vh]">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!authenticated) {
+    return <Navigate to="/auth" />;
+  }
+
+  return <>{children}</>;
+};
+
+// Admin route wrapper
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data } = await supabase.auth.getSession();
+      
+      if (data.session) {
+        const isAdmin = data.session.user.user_metadata?.is_admin === true;
+        setIsAdmin(isAdmin);
+      }
+      
+      setLoading(false);
+    };
+
+    checkAdminStatus();
+  }, []);
+
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="container flex items-center justify-center min-h-[60vh]">
+          <p className="text-muted-foreground">Verifying admin privileges...</p>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/" />;
+  }
+
+  return <>{children}</>;
+};
+
 const App = () => (
   <StrictMode>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Helmet>
-            <title>Traption - AI Social Media Caption Generator</title>
-            <meta name="description" content="Create platform-optimized captions for your social media posts with Traption's AI caption generator." />
-            <meta name="keywords" content="social media, captions, AI, content creation, instagram captions, twitter posts, linkedin content" />
-            <meta property="og:title" content="Traption - AI Social Media Caption Generator" />
-            <meta property="og:description" content="Create platform-optimized captions for your social media posts with Traption's AI caption generator." />
+            <title>Traption - Social Media Tools Platform</title>
+            <meta name="description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
+            <meta name="keywords" content="social media, captions, AI, content creation, instagram captions, twitter posts, linkedin content, video scripts, content calendar" />
+            <meta property="og:title" content="Traption - Social Media Tools Platform" />
+            <meta property="og:description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://traption.app" />
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="Traption - AI Social Media Caption Generator" />
-            <meta name="twitter:description" content="Create platform-optimized captions for your social media posts with Traption's AI caption generator." />
+            <meta name="twitter:title" content="Traption - Social Media Tools Platform" />
+            <meta name="twitter:description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
           </Helmet>
           <Toaster />
           <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/tools" element={
+                <ProtectedRoute>
+                  <ToolsHub />
+                </ProtectedRoute>
+              } />
+              <Route path="/tools/caption-generator" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/account" element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
               } />
               <Route path="/about" element={
                 <MainLayout>
@@ -90,6 +193,8 @@ const App = () => (
                   <Blog />
                 </MainLayout>
               } />
+              {/* Temporary redirect for old dashboard route */}
+              <Route path="/dashboard" element={<Navigate to="/tools/caption-generator" />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
