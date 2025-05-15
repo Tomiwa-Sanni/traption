@@ -14,6 +14,7 @@ const Features = () => {
             <div className="min-w-full flex justify-start p-1">
               <TabsList className="inline-flex w-max">
                 <TabsTrigger value="platforms">Platforms</TabsTrigger>
+                <TabsTrigger value="tools">Tools</TabsTrigger>
                 <TabsTrigger value="customization">Customization</TabsTrigger>
                 <TabsTrigger value="style">Style Options</TabsTrigger>
                 <TabsTrigger value="language">Languages</TabsTrigger>
@@ -28,7 +29,7 @@ const Features = () => {
             <CardContent className="pt-6">
               <h2 className="text-2xl font-semibold mb-4">Multi-Platform Support</h2>
               <p className="text-muted-foreground mb-6">
-                Traption generates platform-specific captions optimized for each social network's unique requirements and audience expectations.
+                Traption generates platform-specific content optimized for each social network's unique requirements and audience expectations.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -66,12 +67,55 @@ const Features = () => {
           </Card>
         </TabsContent>
         
+        <TabsContent value="tools" className="space-y-4 mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="text-2xl font-semibold mb-4">Comprehensive Tool Suite</h2>
+              <p className="text-muted-foreground mb-6">
+                Traption offers a complete collection of tools to enhance your social media strategy from content creation to engagement.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Caption Generator</h3>
+                  <p className="text-sm text-muted-foreground">Create platform-optimized captions for all your social media posts in seconds.</p>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Hooks & Headlines</h3>
+                  <p className="text-sm text-muted-foreground">Craft attention-grabbing hooks and headlines that stop the scroll and drive engagement.</p>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Video Script Writer</h3>
+                  <p className="text-sm text-muted-foreground">Generate engaging scripts for TikTok, Reels, YouTube Shorts and other short-form video content.</p>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Content Calendar</h3>
+                  <p className="text-sm text-muted-foreground">Organize and plan your content schedule with a visual calendar and content strategy tools.</p>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Comment Assistant</h3>
+                  <p className="text-sm text-muted-foreground">Generate thoughtful responses to comments based on your brand voice and tone.</p>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-semibold mb-2">Resources AI</h3>
+                  <p className="text-sm text-muted-foreground">Discover the best tools and resources for your content creation needs.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
         <TabsContent value="customization">
           <Card>
             <CardContent className="pt-6">
               <h2 className="text-2xl font-semibold mb-4">Advanced Customization</h2>
               <p className="text-muted-foreground mb-6">
-                Tailor your captions exactly how you want them with our detailed customization options.
+                Tailor your content exactly how you want it with our detailed customization options.
               </p>
               
               <div className="space-y-6">
@@ -96,7 +140,7 @@ const Features = () => {
                     <li>Emoji integration to add visual appeal</li>
                     <li>Hashtag generation for increased discoverability</li>
                     <li>Custom call-to-actions to drive user engagement</li>
-                    <li>Adjustable caption length to fit your needs</li>
+                    <li>Adjustable content length to fit your needs</li>
                   </ul>
                 </div>
               </div>
@@ -107,9 +151,9 @@ const Features = () => {
         <TabsContent value="style">
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-2xl font-semibold mb-4">Caption Styles</h2>
+              <h2 className="text-2xl font-semibold mb-4">Content Styles</h2>
               <p className="text-muted-foreground mb-6">
-                Select from various structural approaches to organize your captions effectively.
+                Select from various structural approaches to organize your content effectively.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -150,7 +194,7 @@ const Features = () => {
             <CardContent className="pt-6">
               <h2 className="text-2xl font-semibold mb-4">Multi-Language Support</h2>
               <p className="text-muted-foreground mb-6">
-                Reach global audiences with captions in multiple languages, each maintaining the right tone and cultural context.
+                Reach global audiences with content in multiple languages, each maintaining the right tone and cultural context.
               </p>
               
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -197,7 +241,7 @@ const Features = () => {
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-semibold mb-2">Local Storage Only</h3>
                   <p className="text-muted-foreground">
-                    Your captions and settings are saved only on your device for your convenience.
+                    Your content and settings are saved only on your device for your convenience.
                   </p>
                 </div>
                 

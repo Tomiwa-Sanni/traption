@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { TikTok } from './icons/TikTok';
 import { Pinterest } from './icons/Pinterest';
 import { WhatsApp } from './icons/WhatsApp';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Define available platforms with their icons, names, and descriptions
 const DEFAULT_PLATFORMS = [
@@ -186,125 +186,131 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
         </p>
         
         {/* Display selected platforms as badges */}
-        {Array.isArray(selectedPlatform) && selectedPlatform.length > 0 ? (
-          selectedPlatform.map(platformId => {
-            const platform = availablePlatforms.find(p => p.id === platformId);
-            if (!platform) return null;
-            
-            return (
-              <Badge key={platformId} variant="secondary" className="flex items-center gap-1">
-                {platform.name}
-                {/* Only show remove button if there's more than one platform selected */}
-                {selectedPlatform.length > 1 && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-4 w-4 rounded-full p-0"
-                    onClick={() => handleSelectPlatform(platformId)}
-                  >
-                    <X className="h-3 w-3" />
-                    <span className="sr-only">Remove</span>
-                  </Button>
-                )}
+        <ScrollArea className="w-full max-w-full">
+          <div className="flex flex-nowrap gap-2 pb-2">
+            {Array.isArray(selectedPlatform) && selectedPlatform.length > 0 ? (
+              selectedPlatform.map(platformId => {
+                const platform = availablePlatforms.find(p => p.id === platformId);
+                if (!platform) return null;
+                
+                return (
+                  <Badge key={platformId} variant="secondary" className="flex items-center gap-1 whitespace-nowrap">
+                    {platform.name}
+                    {/* Only show remove button if there's more than one platform selected */}
+                    {selectedPlatform.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-4 w-4 rounded-full p-0"
+                        onClick={() => handleSelectPlatform(platformId)}
+                      >
+                        <X className="h-3 w-3" />
+                        <span className="sr-only">Remove</span>
+                      </Button>
+                    )}
+                  </Badge>
+                );
+              })
+            ) : selectedPlatform ? (
+              <Badge variant="secondary" className="flex items-center gap-1 whitespace-nowrap">
+                {availablePlatforms.find(p => p.id === selectedPlatform)?.name || selectedPlatform}
+                {/* Don't show remove button for single selected platform */}
               </Badge>
-            );
-          })
-        ) : selectedPlatform ? (
-          <Badge variant="secondary" className="flex items-center gap-1">
-            {availablePlatforms.find(p => p.id === selectedPlatform)?.name || selectedPlatform}
-            {/* Don't show remove button for single selected platform */}
-          </Badge>
-        ) : null}
+            ) : null}
+          </div>
+        </ScrollArea>
       </div>
       
       {/* Platform grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {availablePlatforms.map(platform => (
-          <Button
-            key={platform.id}
-            variant="outline"
-            size="lg"
-            className={`flex items-center justify-start gap-2 h-auto py-3 px-4 overflow-hidden ${
-              isPlatformSelected(platform.id)
-                ? 'border-primary/80 bg-primary/10 dark:text-primary-foreground'
-                : ''
-            } hover:border-primary hover:text-primary focus:text-primary`}
-            onClick={() => handleSelectPlatform(platform.id)}
-          >
-            <div className="flex-shrink-0">
-              {isPlatformSelected(platform.id) ? (
-                <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="h-3 w-3 text-background dark:text-primary-foreground" />
-                </div>
-              ) : (
-                platform.icon
-              )}
-            </div>
-            <div className="text-left">
-              <div className={`font-medium ${isPlatformSelected(platform.id) ? 'text-primary dark:text-primary-foreground' : ''}`}>
-                {platform.name}
-              </div>
-              <p className="text-xs text-muted-foreground line-clamp-1">
-                {platform.description}
-              </p>
-            </div>
-          </Button>
-        ))}
-        
-        {/* Custom platform button */}
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
+      <ScrollArea className="w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-w-[600px]">
+          {availablePlatforms.map(platform => (
             <Button
+              key={platform.id}
               variant="outline"
               size="lg"
-              className="flex items-center justify-start gap-2 h-auto py-3 px-4 border-dashed"
+              className={`flex items-center justify-start gap-2 h-auto py-3 px-4 overflow-hidden ${
+                isPlatformSelected(platform.id)
+                  ? 'border-primary/80 bg-primary/10 dark:text-primary-foreground'
+                  : ''
+              } hover:border-primary hover:text-primary focus:text-primary`}
+              onClick={() => handleSelectPlatform(platform.id)}
             >
               <div className="flex-shrink-0">
-                <Plus className="h-5 w-5" />
+                {isPlatformSelected(platform.id) ? (
+                  <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="h-3 w-3 text-background dark:text-primary-foreground" />
+                  </div>
+                ) : (
+                  platform.icon
+                )}
               </div>
               <div className="text-left">
-                <div className="font-medium">Custom Platform</div>
-                <p className="text-xs text-muted-foreground">
-                  Add your own platform
+                <div className={`font-medium ${isPlatformSelected(platform.id) ? 'text-primary dark:text-primary-foreground' : ''}`}>
+                  {platform.name}
+                </div>
+                <p className="text-xs text-muted-foreground line-clamp-1">
+                  {platform.description}
                 </p>
               </div>
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Custom Platform</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="platform-name">Platform Name</Label>
-                <Input
-                  id="platform-name"
-                  placeholder="e.g., YouTube, Blog, Email"
-                  value={customPlatformName}
-                  onChange={(e) => setCustomPlatformName(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="platform-desc">Description (optional)</Label>
-                <Input
-                  id="platform-desc"
-                  placeholder="Brief description of the platform"
-                  value={customPlatformDesc}
-                  onChange={(e) => setCustomPlatformDesc(e.target.value)}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
+          ))}
+          
+          {/* Custom platform button */}
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex items-center justify-start gap-2 h-auto py-3 px-4 border-dashed"
+              >
+                <div className="flex-shrink-0">
+                  <Plus className="h-5 w-5" />
+                </div>
+                <div className="text-left">
+                  <div className="font-medium">Custom Platform</div>
+                  <p className="text-xs text-muted-foreground">
+                    Add your own platform
+                  </p>
+                </div>
               </Button>
-              <Button onClick={handleAddCustomPlatform} disabled={!customPlatformName.trim()}>
-                Add Platform
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Custom Platform</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="platform-name">Platform Name</Label>
+                  <Input
+                    id="platform-name"
+                    placeholder="e.g., YouTube, Blog, Email"
+                    value={customPlatformName}
+                    onChange={(e) => setCustomPlatformName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="platform-desc">Description (optional)</Label>
+                  <Input
+                    id="platform-desc"
+                    placeholder="Brief description of the platform"
+                    value={customPlatformDesc}
+                    onChange={(e) => setCustomPlatformDesc(e.target.value)}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddCustomPlatform} disabled={!customPlatformName.trim()}>
+                  Add Platform
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </ScrollArea>
     </div>
   );
 };

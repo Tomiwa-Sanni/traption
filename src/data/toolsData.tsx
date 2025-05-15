@@ -9,6 +9,7 @@ export interface ToolData {
   path: string;
   icon: JSX.Element;
   category: string;
+  available?: boolean;
 }
 
 export const toolsData: ToolData[] = [
@@ -18,7 +19,8 @@ export const toolsData: ToolData[] = [
     description: 'Create platform-optimized captions for all your social media posts in seconds.',
     path: '/tools/caption-generator',
     icon: <PenLine className="h-5 w-5" />,
-    category: 'content'
+    category: 'content',
+    available: true
   },
   {
     id: 'hooks-generator',
@@ -26,7 +28,8 @@ export const toolsData: ToolData[] = [
     description: 'Craft attention-grabbing hooks and headlines that stop the scroll and drive engagement.',
     path: '/tools/hooks-generator',
     icon: <Sparkles className="h-5 w-5" />,
-    category: 'content'
+    category: 'content',
+    available: false
   },
   {
     id: 'video-scripts',
@@ -34,7 +37,8 @@ export const toolsData: ToolData[] = [
     description: 'Generate engaging scripts for TikTok, Reels, YouTube Shorts and other short-form video content.',
     path: '/tools/video-scripts',
     icon: <Video className="h-5 w-5" />,
-    category: 'video'
+    category: 'video',
+    available: false
   },
   {
     id: 'comment-assistant',
@@ -42,7 +46,8 @@ export const toolsData: ToolData[] = [
     description: 'Generate thoughtful responses to comments based on your brand voice and tone.',
     path: '/tools/comment-assistant',
     icon: <MessageSquareText className="h-5 w-5" />,
-    category: 'engagement'
+    category: 'engagement',
+    available: false
   },
   {
     id: 'content-calendar',
@@ -50,7 +55,8 @@ export const toolsData: ToolData[] = [
     description: 'Organize and plan your content schedule with a visual calendar and content strategy tools.',
     path: '/tools/content-calendar',
     icon: <Calendar className="h-5 w-5" />,
-    category: 'planning'
+    category: 'planning',
+    available: false
   },
   {
     id: 'video-ideas',
@@ -58,7 +64,8 @@ export const toolsData: ToolData[] = [
     description: 'Get fresh content ideas for your videos based on your niche, trends, and audience interests.',
     path: '/tools/video-ideas',
     icon: <Lightbulb className="h-5 w-5" />,
-    category: 'ideation'
+    category: 'ideation',
+    available: false
   },
   {
     id: 'resources-ai',
@@ -66,14 +73,16 @@ export const toolsData: ToolData[] = [
     description: 'Discover the best tools and resources for your content creation needs with AI recommendations.',
     path: '/tools/resources-ai',
     icon: <Wrench className="h-5 w-5" />,
-    category: 'resources'
+    category: 'resources',
+    available: false
   },
   {
     id: 'post-scheduler',
     name: 'Post Timer & Scheduler',
-    description: 'Set up your posting schedule and get reminders when it\'s time to post your content\.',
+    description: 'Set up your posting schedule and get reminders when it\'s time to post your content.',
     path: '/tools/post-scheduler',
     icon: <Clock className="h-5 w-5" />,
-    category: 'planning'
+    category: 'planning',
+    available: false
   }
 ];
