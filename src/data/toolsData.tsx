@@ -71,7 +71,7 @@ export const toolsData: ToolData[] = [
   {
     id: 'post-scheduler',
     name: 'Post Timer & Scheduler',
-    description: 'Set up your posting schedule and get reminders when it's time to post your content.',
+    description: 'Set up your posting schedule and get reminders when it\'s time to post your content\.',
     path: '/tools/post-scheduler',
     icon: <Clock className="h-5 w-5" />,
     category: 'planning'
