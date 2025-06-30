@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
@@ -99,20 +98,23 @@ const AdminDashboard = () => {
       
       setToolUsageData(toolUsageData);
       
-      // Get active users today
-      const { count: activeUsersToday, error: activeUsersError } = await supabase
+      // Get active users today - Fixed the query syntax
+      const { data: activeUsersData, error: activeUsersError } = await supabase
         .from('tool_usage')
-        .select('user_id', { count: 'exact', head: true })
+        .select('user_id')
         .gte('created_at', today.toISOString())
-        .is('user_id', 'not.null');
+        .not('user_id', 'is', null);
         
       if (activeUsersError) throw activeUsersError;
+      
+      // Count unique active users
+      const uniqueActiveUsers = new Set(activeUsersData?.map(item => item.user_id) || []);
       
       setStats({
         totalUsers: totalUsers || 0,
         newUsersToday: newUsersToday || 0,
         totalToolUsage: toolUsage.length,
-        activeUsersToday: activeUsersToday || 0
+        activeUsersToday: uniqueActiveUsers.size
       });
       
     } catch (error) {
