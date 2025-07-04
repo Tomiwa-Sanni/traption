@@ -62,11 +62,11 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
               <Bell className="h-8 w-8 text-white" />
             </div>
             
-            <h3 className="text-xl font-semibold mb-2 text-glass-primary">
+            <h3 className="text-xl font-semibold mb-2 text-foreground">
               Get Notified
             </h3>
             
-            <p className="text-glass-muted mb-6">
+            <p className="text-muted-foreground mb-6">
               Be the first to know when {toolName} launches. We'll send you an email as soon as it's available.
             </p>
 
@@ -89,7 +89,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
                   <Bell className="h-5 w-5" />
                   <span>You're all set!</span>
                 </div>
-                <p className="text-glass-muted">
+                <p className="text-muted-foreground">
                   We'll email you when {toolName} is ready.
                 </p>
               </div>
@@ -99,25 +99,25 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
 
         {/* Features Preview */}
         <GlassCard className="p-8">
-          <h3 className="text-xl font-semibold mb-6 text-glass-primary">
+          <h3 className="text-xl font-semibold mb-6 text-foreground">
             What to Expect
           </h3>
           
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-              <span className="text-glass-secondary">Estimated Launch: {estimatedLaunch}</span>
+              <span className="text-foreground">Estimated Launch: {estimatedLaunch}</span>
             </div>
             
             {features.length > 0 && (
               <>
                 <div className="border-t border-white/10 pt-4">
-                  <h4 className="font-medium mb-3 text-glass-primary">Planned Features:</h4>
+                  <h4 className="font-medium mb-3 text-foreground">Planned Features:</h4>
                   <ul className="space-y-2">
                     {features.map((feature, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-2 flex-shrink-0"></div>
-                        <span className="text-glass-muted">{feature}</span>
+                        <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
