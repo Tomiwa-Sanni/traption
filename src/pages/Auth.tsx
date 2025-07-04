@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,6 +28,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
   
@@ -90,11 +92,27 @@ const Auth = () => {
           data: {
             first_name: validatedData.firstName,
             last_name: validatedData.lastName,
+            newsletter_consent: newsletterConsent,
           }
         }
       });
       
       if (error) throw error;
+
+      // Add to newsletter if user consented
+      if (newsletterConsent) {
+        try {
+          await supabase
+            .from('newsletter_subscriptions')
+            .insert({
+              email: validatedData.email,
+              source: 'signup'
+            });
+        } catch (newsletterError) {
+          // Don't fail signup if newsletter subscription fails
+          console.error('Newsletter subscription error:', newsletterError);
+        }
+      }
       
       // Redirect to email confirmation page
       navigate('/email-confirmation');
@@ -209,6 +227,16 @@ const Auth = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="newsletter" 
+                      checked={newsletterConsent}
+                      onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
+                    />
+                    <Label htmlFor="newsletter" className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      I agree to receive AI insights, newsletters, and product updates from Traption
+                    </Label>
                   </div>
                 </CardContent>
                 <CardFooter>

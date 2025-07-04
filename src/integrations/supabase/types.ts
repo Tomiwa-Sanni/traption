@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      newsletter_subscriptions: {
+        Row: {
+          email: string
+          id: string
+          is_active: boolean
+          source: string
+          subscribed_at: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          is_active?: boolean
+          source: string
+          subscribed_at?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          is_active?: boolean
+          source?: string
+          subscribed_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -16,6 +40,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          newsletter_consent: boolean | null
           updated_at: string
           username: string | null
         }
@@ -25,6 +50,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          newsletter_consent?: boolean | null
           updated_at?: string
           username?: string | null
         }
@@ -34,6 +60,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          newsletter_consent?: boolean | null
           updated_at?: string
           username?: string | null
         }

@@ -7,22 +7,22 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GlassCard } from '@/components/glass';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ComingSoonProps {
   toolName: string;
   description: string;
   estimatedLaunch?: string;
-  features?: string[];
 }
 
 export const ComingSoon: React.FC<ComingSoonProps> = ({
   toolName,
   description,
-  estimatedLaunch = "Soon",
-  features = []
+  estimatedLaunch = "Soon"
 }) => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNotifyMe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +31,33 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
       return;
     }
     
-    // Simulate email subscription
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubscribed(true);
-    toast.success('Thanks! We\'ll notify you when it\'s ready.');
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert({
+          email,
+          source: 'coming_soon'
+        });
+
+      if (error) {
+        if (error.code === '23505') { // Unique constraint violation
+          toast.success('You\'re already subscribed! We\'ll notify you when it\'s ready.');
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success('Thanks! We\'ll notify you when it\'s ready.');
+      }
+      
+      setIsSubscribed(true);
+    } catch (error: any) {
+      console.error('Newsletter subscription error:', error);
+      toast.error('Failed to subscribe. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,8 +77,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Main Info Card */}
+      <div className="max-w-md mx-auto">
         <GlassCard className="p-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 mb-6">
@@ -66,8 +88,12 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
               Get Notified
             </h3>
             
-            <p className="text-muted-foreground mb-6">
-              Be the first to know when {toolName} launches. We'll send you an email as soon as it's available.
+            <p className="text-muted-foreground mb-2">
+              Be the first to know when {toolName} launches.
+            </p>
+            
+            <p className="text-sm text-muted-foreground mb-6">
+              Estimated Launch: {estimatedLaunch}
             </p>
 
             {!isSubscribed ? (
@@ -78,9 +104,10 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="glass w-full"
+                  required
                 />
-                <Button type="submit" className="w-full">
-                  Notify Me
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Subscribing...' : 'Notify Me'}
                 </Button>
               </form>
             ) : (
@@ -93,36 +120,6 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
                   We'll email you when {toolName} is ready.
                 </p>
               </div>
-            )}
-          </div>
-        </GlassCard>
-
-        {/* Features Preview */}
-        <GlassCard className="p-8">
-          <h3 className="text-xl font-semibold mb-6 text-foreground">
-            What to Expect
-          </h3>
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-              <span className="text-foreground">Estimated Launch: {estimatedLaunch}</span>
-            </div>
-            
-            {features.length > 0 && (
-              <>
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="font-medium mb-3 text-foreground">Planned Features:</h4>
-                  <ul className="space-y-2">
-                    {features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-2 flex-shrink-0"></div>
-                        <span className="text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </>
             )}
           </div>
         </GlassCard>
