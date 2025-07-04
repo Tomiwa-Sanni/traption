@@ -36,9 +36,9 @@ const MainLayout = ({
         <meta name="twitter:description" content={description} />
         <link rel="canonical" href={window.location.href} />
       </Helmet>
-      <div className="flex flex-col min-h-screen">
+      <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-grow fade-in">
+        <main className="flex-1 overflow-y-auto fade-in">
           {children}
         </main>
         <Footer />
