@@ -86,6 +86,7 @@ const Auth = () => {
         email: validatedData.email,
         password: validatedData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth`,
           data: {
             first_name: validatedData.firstName,
             last_name: validatedData.lastName,
@@ -95,8 +96,8 @@ const Auth = () => {
       
       if (error) throw error;
       
-      toast.success('Account created successfully! Please check your email to verify your account.');
-      setActiveTab('login');
+      // Redirect to email confirmation page
+      navigate('/email-confirmation');
       
     } catch (error: any) {
       if (error instanceof z.ZodError) {

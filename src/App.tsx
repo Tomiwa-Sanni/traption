@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ToolsHub from "./pages/ToolsHub";
 import Auth from "./pages/Auth";
+import EmailConfirmation from "./pages/EmailConfirmation";
 import Account from "./pages/Account";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
@@ -20,6 +21,10 @@ import FAQ from "./pages/FAQ";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Blog from "./pages/Blog";
+import HooksGenerator from "./pages/tools/HooksGenerator";
+import VideoScripts from "./pages/tools/VideoScripts";
+import CommentAssistant from "./pages/tools/CommentAssistant";
+import ContentCalendar from "./pages/tools/ContentCalendar";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -136,6 +141,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/email-confirmation" element={<EmailConfirmation />} />
               <Route path="/tools" element={
                 <ProtectedRoute>
                   <ToolsHub />
@@ -146,6 +152,26 @@ const App = () => (
                   <MainLayout>
                     <Dashboard />
                   </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/tools/hooks-generator" element={
+                <ProtectedRoute>
+                  <HooksGenerator />
+                </ProtectedRoute>
+              } />
+              <Route path="/tools/video-scripts" element={
+                <ProtectedRoute>
+                  <VideoScripts />
+                </ProtectedRoute>
+              } />
+              <Route path="/tools/comment-assistant" element={
+                <ProtectedRoute>
+                  <CommentAssistant />
+                </ProtectedRoute>
+              } />
+              <Route path="/tools/content-calendar" element={
+                <ProtectedRoute>
+                  <ContentCalendar />
                 </ProtectedRoute>
               } />
               <Route path="/account" element={
