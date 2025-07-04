@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useApiKey } from '@/hooks/useApiKey';
 import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
@@ -28,6 +27,11 @@ interface CaptionProgress {
 
 const Dashboard = () => {
   const { apiKey } = useApiKey();
+  
+  // Save that user visited caption generator
+  useEffect(() => {
+    localStorage.setItem('traption_last_tool', 'caption-generator');
+  }, []);
   
   // Platform state - always start with 'instagram' as default
   const [selectedPlatform, setSelectedPlatform] = useState<string | string[]>('instagram');
@@ -235,7 +239,7 @@ const Dashboard = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-transparent bg-clip-text inline-block">
             AI Caption Generator
           </h1>
-          <p className="text-muted-foreground mt-2">Create engaging captions for your social media posts in seconds</p>
+          <p className="text-muted-foreground mt-2">Create engaging, platform-optimized captions for your social media posts in seconds</p>
         </div>
         
         {/* Dashboard stats cards */}
@@ -247,7 +251,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm font-medium">AI-Powered</p>
-                <p className="text-xs text-muted-foreground">Advanced caption generation</p>
+                <p className="text-xs text-muted-foreground">Advanced content generation</p>
               </div>
             </CardContent>
           </Card>
@@ -258,7 +262,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm font-medium">Instant Results</p>
-                <p className="text-xs text-muted-foreground">Get captions in seconds</p>
+                <p className="text-xs text-muted-foreground">Generate captions in seconds</p>
               </div>
             </CardContent>
           </Card>
@@ -269,7 +273,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm font-medium">Platform Optimized</p>
-                <p className="text-xs text-muted-foreground">Tailored for each network</p>
+                <p className="text-xs text-muted-foreground">Tailored for each social network</p>
               </div>
             </CardContent>
           </Card>

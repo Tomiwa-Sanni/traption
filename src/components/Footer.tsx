@@ -18,7 +18,7 @@ export function Footer() {
               </h2>
             </Link>
             <p className="text-muted-foreground text-sm mb-4">
-              AI-powered caption generator for social media content that helps you create engaging captions in seconds.
+              AI-powered social media tools that help you create engaging content for every platform in seconds.
             </p>
           </div>
 
@@ -32,8 +32,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-muted-foreground hover:text-foreground text-sm transition">
-                  Dashboard
+                <Link to="/tools" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Tools
                 </Link>
               </li>
               <li>
@@ -47,8 +47,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-muted-foreground hover:text-foreground text-sm transition">
-                  Blog
+                <Link to="/changelog" className="text-muted-foreground hover:text-foreground text-sm transition">
+                  Changelog
                 </Link>
               </li>
             </ul>
@@ -85,24 +85,24 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-3">Get Started</h3>
             <p className="text-muted-foreground text-sm mb-4">
-              Start generating engaging captions for your social media posts today.
+              Start creating engaging content for your social media posts today.
             </p>
             <Button asChild size="sm" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
-              <Link to="/dashboard">Try it now</Link>
+              <Link to="/tools">Try it now</Link>
             </Button>
           </div>
         </div>
 
         <Separator className="my-8" />
 
-        {/* Bottom footer
+        {/* Bottom footer */}
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
             © {currentYear} Traption. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 sm:mt-0">
             <a 
-              href="#" 
+              href="https://twitter.com/traption" 
               className="text-muted-foreground hover:text-foreground"
               aria-label="Twitter"
             >
@@ -120,7 +120,7 @@ export function Footer() {
               </svg>
             </a>
             <a 
-              href="#" 
+              href="https://github.com/traption" 
               className="text-muted-foreground hover:text-foreground"
               aria-label="GitHub"
             >
@@ -139,7 +139,7 @@ export function Footer() {
               </svg>
             </a>
             <a 
-              href="#" 
+              href="https://linkedin.com/company/traption" 
               className="text-muted-foreground hover:text-foreground"
               aria-label="LinkedIn"
             >
@@ -159,7 +159,7 @@ export function Footer() {
               </svg>
             </a>
           </div>
-        </div>*/}
+        </div>
       </div>
     </footer>
   );

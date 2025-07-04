@@ -20,7 +20,7 @@ import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Blog from "./pages/Blog";
+import Changelog from "./pages/Changelog";
 import HooksGenerator from "./pages/tools/HooksGenerator";
 import VideoScripts from "./pages/tools/VideoScripts";
 import CommentAssistant from "./pages/tools/CommentAssistant";
@@ -118,22 +118,43 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Smart redirect for dashboard - leads to last used tool
+const DashboardRedirect = () => {
+  useEffect(() => {
+    // Check for last used tool in localStorage
+    const lastTool = localStorage.getItem('traption_last_tool');
+    if (lastTool && lastTool !== 'caption-generator') {
+      window.location.href = `/tools/${lastTool}`;
+    } else {
+      window.location.href = '/tools/caption-generator';
+    }
+  }, []);
+
+  return (
+    <MainLayout>
+      <div className="container flex items-center justify-center min-h-[60vh]">
+        <p className="text-muted-foreground">Redirecting to your tools...</p>
+      </div>
+    </MainLayout>
+  );
+};
+
 const App = () => (
   <StrictMode>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Helmet>
-            <title>Traption - Social Media Tools Platform</title>
-            <meta name="description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
-            <meta name="keywords" content="social media, captions, AI, content creation, instagram captions, twitter posts, linkedin content, video scripts, content calendar" />
-            <meta property="og:title" content="Traption - Social Media Tools Platform" />
-            <meta property="og:description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
+            <title>Traption - AI-Powered Social Media Tools Platform</title>
+            <meta name="description" content="Create engaging social media content with Traption's suite of AI-powered tools. Generate captions, hooks, video scripts, and more for every platform in seconds." />
+            <meta name="keywords" content="social media, AI captions, content creation, instagram captions, twitter posts, linkedin content, video scripts, content calendar, social media tools" />
+            <meta property="og:title" content="Traption - AI-Powered Social Media Tools Platform" />
+            <meta property="og:description" content="Create engaging social media content with Traption's suite of AI-powered tools. Generate captions, hooks, video scripts, and more for every platform in seconds." />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://traption.app" />
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="Traption - Social Media Tools Platform" />
-            <meta name="twitter:description" content="Transform your social media strategy with Traption's suite of AI-powered tools. Create, plan, and optimize your content for every platform in one place." />
+            <meta name="twitter:title" content="Traption - AI-Powered Social Media Tools Platform" />
+            <meta name="twitter:description" content="Create engaging social media content with Traption's suite of AI-powered tools. Generate captions, hooks, video scripts, and more for every platform in seconds." />
           </Helmet>
           <Toaster />
           <Sonner />
@@ -214,13 +235,17 @@ const App = () => (
                   <PrivacyPolicy />
                 </MainLayout>
               } />
-              <Route path="/blog" element={
+              <Route path="/changelog" element={
                 <MainLayout>
-                  <Blog />
+                  <Changelog />
                 </MainLayout>
               } />
-              {/* Temporary redirect for old dashboard route */}
-              <Route path="/dashboard" element={<Navigate to="/tools/caption-generator" />} />
+              {/* Smart redirect for dashboard - leads to last used tool */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <DashboardRedirect />
+                </ProtectedRoute>
+              } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
