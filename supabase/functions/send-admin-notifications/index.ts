@@ -58,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "Traption <notifications@traption.app>",
+      from: "Traption <notifications@stewpidos.buzz>",
       to: ["traption.contact@gmail.com"],
       subject: subject,
       html: html,
