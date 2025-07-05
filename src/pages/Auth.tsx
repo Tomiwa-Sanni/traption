@@ -45,6 +45,20 @@ const Auth = () => {
     
     checkSession();
   }, [navigate]);
+
+  const sendAdminNotification = async (type: 'newsletter_subscription' | 'new_user_signup', data: any) => {
+    try {
+      await supabase.functions.invoke('send-admin-notifications', {
+        body: {
+          type,
+          ...data
+        }
+      });
+    } catch (error) {
+      console.error('Failed to send admin notification:', error);
+      // Don't fail the main operation if notification fails
+    }
+  };
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,6 +113,13 @@ const Auth = () => {
       
       if (error) throw error;
 
+      // Send admin notification for new user signup
+      await sendAdminNotification('new_user_signup', {
+        email: validatedData.email,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName
+      });
+
       // Add to newsletter if user consented
       if (newsletterConsent) {
         try {
@@ -108,6 +129,12 @@ const Auth = () => {
               email: validatedData.email,
               source: 'signup'
             });
+
+          // Send admin notification for newsletter subscription
+          await sendAdminNotification('newsletter_subscription', {
+            email: validatedData.email,
+            source: 'signup'
+          });
         } catch (newsletterError) {
           // Don't fail signup if newsletter subscription fails
           console.error('Newsletter subscription error:', newsletterError);

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,19 +13,20 @@ const Changelog = () => {
       changes: [
         "🎉 Initial release of Traption - AI-powered social media tools platform",
         "✨ AI Caption Generator with platform-specific optimization",
-        "🔧 Hooks Generator for engaging social media hooks",
-        "📹 Video Scripts generator for content creators",
-        "💬 Comment Assistant for engaging responses",
-        "📅 Content Calendar for planning and scheduling",
         "🔐 User authentication and account management",
         "📱 Responsive design for all devices",
         "🎨 Modern glass-morphism UI design",
         "⚡ Real-time caption generation with progress tracking",
         "🌐 Multi-language support for global reach",
-        "📊 Platform-specific content optimization",
+        "📊 Platform-specific content optimization (Instagram, Twitter, LinkedIn, Facebook, TikTok)",
         "🎯 Customizable tone and style options",
         "📧 Newsletter subscription system",
-        "🔒 Secure user data handling with Supabase"
+        "🔒 Secure user data handling with Supabase",
+        "💬 Admin email notifications for new signups and newsletter subscriptions",
+        "📝 User profile management and settings",
+        "🎭 Multiple writing tones (Professional, Casual, Humorous, Inspirational, Educational)",
+        "📈 Smart dashboard with tool navigation",
+        "🔄 Email verification system for new users"
       ]
     }
   ];

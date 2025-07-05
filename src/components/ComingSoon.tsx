@@ -24,6 +24,21 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const sendAdminNotification = async (email: string, source: string) => {
+    try {
+      await supabase.functions.invoke('send-admin-notifications', {
+        body: {
+          type: 'newsletter_subscription',
+          email,
+          source
+        }
+      });
+    } catch (error) {
+      console.error('Failed to send admin notification:', error);
+      // Don't fail the main operation if notification fails
+    }
+  };
+
   const handleNotifyMe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
@@ -49,6 +64,8 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
         }
       } else {
         toast.success('Thanks! We\'ll notify you when it\'s ready.');
+        // Send admin notification for new newsletter subscription
+        await sendAdminNotification(email, 'coming_soon');
       }
       
       setIsSubscribed(true);
