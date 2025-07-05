@@ -59,7 +59,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Traption <notifications@traption.app>",
-      to: ["admin@traption.app"], // Replace with your actual admin email
+      to: ["traption.contact@gmail.com"],
       subject: subject,
       html: html,
     });
