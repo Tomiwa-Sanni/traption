@@ -44,25 +44,33 @@ export async function generateCaption({
     // Create an AI self-critique cycle for the prompt
     async function generateWithSelfCritique(): Promise<string> {
       // Base system prompt for the initial caption generation
-      const baseSystemPrompt = currentPlatform.toLowerCase() === 'membo' 
-        ? `You are a hilarious meme creator and viral content specialist for Membo, the ultimate meme sharing platform. You create funny, relatable, and shareable meme captions that connect with meme lovers. Your content should be casual, humorous, and designed to go viral. You must follow all instructions exactly and return only the meme caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`
+      const baseSystemPrompt = style === 'memes' 
+        ? `You are a viral content creator who understands internet culture and creates highly shareable, relatable content. You craft content that people immediately want to share with friends, using humor, relatability, and current trends without being forced or obvious about it. You must follow all instructions exactly and return only the caption text—no explanations, formatting, or extra content.`
         : `You are Traption, a professional social media copywriter with expert-level knowledge of ${currentPlatform} best practices. 
 You must follow all instructions exactly and return only the caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`;
       
-      const baseUserPrompt = currentPlatform.toLowerCase() === 'membo' 
+      const baseUserPrompt = style === 'memes' 
         ? `
-Create a hilarious and viral meme caption for Membo, the ultimate meme sharing platform.
+Create highly shareable, viral content that people immediately want to share with friends.
 
-The meme caption must follow these rules:
+Content creation rules:
 
-- Start with a funny, relatable hook that meme lovers will instantly connect with.
-- Turn this content into meme gold: ${description}
-- Make it shareable, quotable, and designed to go viral on meme platforms.
-- Use internet culture, trending meme formats, and relatable humor.
-- Naturally weave in these keywords if they fit the meme vibe: ${keywords.length > 0 ? keywords.join(', ') : 'none'}.
-- Keep it authentic to meme culture - be funny, not corporate.
-- Make people want to share it with their friends immediately.
-${cta ? `- End with this call to action in a meme-friendly way: ${cta}` : ''}`
+- Transform this topic into something hilariously relatable: ${description}
+- Use humor, irony, and current internet culture naturally
+- Create content that feels like it came from a friend, not a brand
+- Make it quotable and instantly shareable
+- Connect with real emotions and experiences people have
+- Naturally incorporate these themes if they fit: ${keywords.length > 0 ? keywords.join(', ') : 'none'}
+${cta ? `- Include this action naturally: ${cta}` : ''}
+
+Additional context:
+- Platform: ${currentPlatform}
+- Tone: ${tone}
+- Language: ${language}
+- Target audience: ${audience || 'Internet users'}
+- Include emojis: ${includeEmojis ? 'yes' : 'no'}
+- Include hashtags: ${includeHashtags ? 'yes' : 'no'}
+- Length: ${captionLength || 'medium'}`
         : `
 Write a highly engaging and well-structured ${captionLength || 'medium'} length caption for ${currentPlatform}.
 
@@ -83,7 +91,9 @@ Additional context:
 - Target audience: ${audience || 'General audience'}
 - Include emojis: ${includeEmojis ? 'yes' : 'no'}
 - Include hashtags: ${includeHashtags ? 'yes' : 'no'}
-- Caption length: ${captionLength || 'medium'}
+- Caption length: ${captionLength || 'medium'}`
+        
+        + `
 
 Strict rules:
 - Do not generate anything outside the specified language.

@@ -46,6 +46,7 @@ export function CustomizationPanel({
     { value: 'problem-agitate-solution', label: 'Problem-Agitate-Solution' },
     { value: 'listicle', label: 'Listicle' },
     { value: 'question-based', label: 'Question-Based' },
+    { value: 'memes', label: 'Memes' },
   ];
 
   const languages = [
