@@ -44,10 +44,26 @@ export async function generateCaption({
     // Create an AI self-critique cycle for the prompt
     async function generateWithSelfCritique(): Promise<string> {
       // Base system prompt for the initial caption generation
-      const baseSystemPrompt = `You are Traption, a professional social media copywriter with expert-level knowledge of ${currentPlatform} best practices. 
+      const baseSystemPrompt = currentPlatform.toLowerCase() === 'membo' 
+        ? `You are a hilarious meme creator and viral content specialist for Membo, the ultimate meme sharing platform. You create funny, relatable, and shareable meme captions that connect with meme lovers. Your content should be casual, humorous, and designed to go viral. You must follow all instructions exactly and return only the meme caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`
+        : `You are Traption, a professional social media copywriter with expert-level knowledge of ${currentPlatform} best practices. 
 You must follow all instructions exactly and return only the caption text—no explanations, formatting, or extra content. Do not add anything that is not requested.`;
       
-      const baseUserPrompt = `
+      const baseUserPrompt = currentPlatform.toLowerCase() === 'membo' 
+        ? `
+Create a hilarious and viral meme caption for Membo, the ultimate meme sharing platform.
+
+The meme caption must follow these rules:
+
+- Start with a funny, relatable hook that meme lovers will instantly connect with.
+- Turn this content into meme gold: ${description}
+- Make it shareable, quotable, and designed to go viral on meme platforms.
+- Use internet culture, trending meme formats, and relatable humor.
+- Naturally weave in these keywords if they fit the meme vibe: ${keywords.length > 0 ? keywords.join(', ') : 'none'}.
+- Keep it authentic to meme culture - be funny, not corporate.
+- Make people want to share it with their friends immediately.
+${cta ? `- End with this call to action in a meme-friendly way: ${cta}` : ''}`
+        : `
 Write a highly engaging and well-structured ${captionLength || 'medium'} length caption for ${currentPlatform}.
 
 The caption must follow these rules:
