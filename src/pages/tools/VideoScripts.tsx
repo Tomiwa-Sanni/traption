@@ -178,42 +178,71 @@ const VideoScripts = () => {
               </div>
             </div>
 
-            <Button 
-              onClick={handleGenerate} 
-              className="w-full mt-6" 
-              disabled={isGenerating || !description.trim()}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating Script...
-                </>
-              ) : (
-                <>
-                  <Video className="w-4 h-4 mr-2" />
-                  Generate Video Script
-                </>
-              )}
-            </Button>
           </Card>
 
           <Card className="p-6">
-            <CustomizationPanel
-              tone={tone}
-              setTone={setTone}
-              style={style}
-              setStyle={setStyle}
-              includeEmojis={includeEmojis}
-              setIncludeEmojis={setIncludeEmojis}
-              includeHashtags={includeHashtags}
-              setIncludeHashtags={setIncludeHashtags}
-              language={language}
-              setLanguage={setLanguage}
-            />
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Customization</h3>
+              
+              <div>
+                <Label htmlFor="video-style">Video Style</Label>
+                <select
+                  id="video-style"
+                  value={style}
+                  onChange={(e) => setStyle(e.target.value)}
+                  className="w-full mt-1 p-2 border rounded-md bg-background"
+                >
+                  <option value="educational">Educational</option>
+                  <option value="entertainment">Entertainment</option>
+                  <option value="promotional">Promotional</option>
+                  <option value="tutorial">Tutorial</option>
+                  <option value="storytelling">Storytelling</option>
+                  <option value="interview">Interview</option>
+                  <option value="documentary">Documentary</option>
+                </select>
+              </div>
+
+
+              <div>
+                <Label htmlFor="language">Language</Label>
+                <select
+                  id="language"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full mt-1 p-2 border rounded-md bg-background"
+                >
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Italian">Italian</option>
+                  <option value="Portuguese">Portuguese</option>
+                  <option value="Chinese">Chinese</option>
+                  <option value="Japanese">Japanese</option>
+                  <option value="Korean">Korean</option>
+                  <option value="Arabic">Arabic</option>
+                </select>
+              </div>
+            </div>
           </Card>
         </div>
 
-        <div>
+        <div className="space-y-6">
+          <Button 
+            onClick={handleGenerate} 
+            className="w-full" 
+            disabled={isGenerating || !description.trim()}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating Script...
+              </>
+            ) : (
+              'Generate Video Script'
+            )}
+          </Button>
+
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Generated Video Script</h2>

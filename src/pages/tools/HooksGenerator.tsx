@@ -18,12 +18,8 @@ const HooksGenerator = () => {
   const [description, setDescription] = useState('');
   const [audience, setAudience] = useState('');
   const [keywords, setKeywords] = useState('');
-  const [tone, setTone] = useState('professional');
-  const [style, setStyle] = useState('hook-story-offer');
-  const [includeEmojis, setIncludeEmojis] = useState(true);
-  const [includeHashtags, setIncludeHashtags] = useState(true);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['General']);
   const [language, setLanguage] = useState('English');
-  const [contentLength, setContentLength] = useState('medium');
   const [generatedHooks, setGeneratedHooks] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -45,27 +41,37 @@ const HooksGenerator = () => {
     try {
       const keywordArray = keywords.split(',').map(k => k.trim()).filter(k => k);
       
-      // Generate multiple hooks by calling the service multiple times
-      const hookPromises = Array.from({ length: 5 }, async (_, index) => {
-        const result = await generateCaption({
-          apiKey,
-          platform: 'General',
-          tone,
-          style,
-          includeEmojis,
-          includeHashtags,
-          language,
-          description: `Generate an attention-grabbing hook/headline for: ${description}`,
-          audience,
-          keywords: keywordArray,
-          cta: '',
-          captionLength: contentLength,
+      // Generate hooks for each selected platform
+      const allHooks: { platform: string; content: string }[] = [];
+      
+      for (const platform of selectedPlatforms) {
+        const hookPromises = Array.from({ length: 3 }, async () => {
+          const result = await generateCaption({
+            apiKey,
+            platform,
+            tone: 'engaging',
+            style: 'attention-grabbing',
+            includeEmojis: platform !== 'LinkedIn',
+            includeHashtags: platform !== 'LinkedIn',
+            language,
+            description: `Create a compelling hook/headline for ${platform}: ${description}`,
+            audience,
+            keywords: keywordArray,
+            cta: '',
+            captionLength: 'short',
+          });
+          return typeof result === 'string' ? result : result[platform] || '';
         });
-        return typeof result === 'string' ? result : result['General'] || '';
-      });
 
-      const hooks = await Promise.all(hookPromises);
-      setGeneratedHooks(hooks.filter(hook => hook && hook.trim()));
+        const platformHooks = await Promise.all(hookPromises);
+        platformHooks.forEach(hook => {
+          if (hook && hook.trim()) {
+            allHooks.push({ platform, content: hook });
+          }
+        });
+      }
+      
+      setGeneratedHooks(allHooks.map(h => `[${h.platform}] ${h.content}`));
       toast.success('Hooks generated successfully!');
     } catch (error: any) {
       console.error('Error generating hooks:', error);
@@ -134,43 +140,77 @@ const HooksGenerator = () => {
                   onChange={(e) => setKeywords(e.target.value)}
                 />
               </div>
+
+              <div>
+                <Label>Social Media Platforms</Label>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {['Instagram', 'Twitter', 'TikTok', 'LinkedIn', 'Facebook', 'YouTube'].map((platform) => (
+                    <label key={platform} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedPlatforms.includes(platform)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedPlatforms([...selectedPlatforms, platform]);
+                          } else {
+                            setSelectedPlatforms(selectedPlatforms.filter(p => p !== platform));
+                          }
+                        }}
+                        className="rounded"
+                      />
+                      <span className="text-sm">{platform}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <Button 
-              onClick={handleGenerate} 
-              className="w-full mt-6" 
-              disabled={isGenerating || !description.trim()}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating Hooks...
-                </>
-              ) : (
-                'Generate Hooks & Headlines'
-              )}
-            </Button>
           </Card>
 
           <Card className="p-6">
-            <CustomizationPanel
-              tone={tone}
-              setTone={setTone}
-              style={style}
-              setStyle={setStyle}
-              includeEmojis={includeEmojis}
-              setIncludeEmojis={setIncludeEmojis}
-              includeHashtags={includeHashtags}
-              setIncludeHashtags={setIncludeHashtags}
-              language={language}
-              setLanguage={setLanguage}
-              captionLength={contentLength}
-              setCaptionLength={setContentLength}
-            />
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Options</h3>
+              
+              <div>
+                <Label htmlFor="language">Language</Label>
+                <select
+                  id="language"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full mt-1 p-2 border rounded-md bg-background"
+                >
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Italian">Italian</option>
+                  <option value="Portuguese">Portuguese</option>
+                  <option value="Chinese">Chinese</option>
+                  <option value="Japanese">Japanese</option>
+                  <option value="Korean">Korean</option>
+                  <option value="Arabic">Arabic</option>
+                </select>
+              </div>
+            </div>
           </Card>
         </div>
 
-        <div>
+        <div className="space-y-6">
+          <Button 
+            onClick={handleGenerate} 
+            className="w-full" 
+            disabled={isGenerating || !description.trim() || selectedPlatforms.length === 0}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating Hooks...
+              </>
+            ) : (
+              'Generate Hooks & Headlines'
+            )}
+          </Button>
+
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Generated Hooks & Headlines</h2>
             {generatedHooks.length === 0 && !isGenerating && (
