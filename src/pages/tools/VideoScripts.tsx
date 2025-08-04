@@ -1,17 +1,14 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Copy, Check, Clock, Video } from 'lucide-react';
-import { generateCaption } from '@/services/openaiService';
+import { generateCaption, captionProgressEmitter } from '@/services/openaiService';
 import { useApiKey } from '@/hooks/useApiKey';
 import { ApiKeyInput } from '@/components/ApiKeyInput';
-import { CustomizationPanel } from '@/components/CustomizationPanel';
+import { CaptionPreview } from '@/components/CaptionPreview';
 import { toast } from 'sonner';
 
 const VideoScripts = () => {
@@ -20,15 +17,24 @@ const VideoScripts = () => {
   const [audience, setAudience] = useState('');
   const [keywords, setKeywords] = useState('');
   const [tone, setTone] = useState('professional');
-  const [style, setStyle] = useState('hook-story-offer');
-  const [includeEmojis, setIncludeEmojis] = useState(true);
-  const [includeHashtags, setIncludeHashtags] = useState(true);
+  const [style, setStyle] = useState('educational');
   const [language, setLanguage] = useState('English');
   const [videoDuration, setVideoDuration] = useState('60');
   const [platform, setPlatform] = useState('TikTok');
-  const [generatedScript, setGeneratedScript] = useState('');
+  const [generatedScript, setGeneratedScript] = useState<Record<string, string>>({});
   const [isGenerating, setIsGenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [currentProgress, setCurrentProgress] = useState('');
+
+  useEffect(() => {
+    const handleProgress = (event: any) => {
+      setCurrentProgress(event.detail);
+    };
+
+    captionProgressEmitter.addEventListener('progress', handleProgress);
+    return () => {
+      captionProgressEmitter.removeEventListener('progress', handleProgress);
+    };
+  }, []);
 
   const handleGenerate = async () => {
     if (!apiKey) {
@@ -42,7 +48,8 @@ const VideoScripts = () => {
     }
 
     setIsGenerating(true);
-    setGeneratedScript('');
+    setGeneratedScript({});
+    setCurrentProgress('');
 
     try {
       const keywordArray = keywords.split(',').map(k => k.trim()).filter(k => k);
@@ -64,8 +71,8 @@ const VideoScripts = () => {
         platform,
         tone,
         style,
-        includeEmojis,
-        includeHashtags,
+        includeEmojis: false,
+        includeHashtags: false,
         language,
         description: scriptPrompt,
         audience,
@@ -74,25 +81,14 @@ const VideoScripts = () => {
         captionLength: 'long',
       });
 
-      const script = typeof result === 'string' ? result : result[platform] || '';
-      setGeneratedScript(script);
+      setGeneratedScript(typeof result === 'string' ? { [platform]: result } : result);
       toast.success('Video script generated successfully!');
     } catch (error: any) {
       console.error('Error generating script:', error);
       toast.error(error.message || 'Failed to generate video script');
     } finally {
       setIsGenerating(false);
-    }
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(generatedScript);
-      setCopied(true);
-      toast.success('Script copied to clipboard!');
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      toast.error('Failed to copy to clipboard');
+      setCurrentProgress('');
     }
   };
 
@@ -177,7 +173,6 @@ const VideoScripts = () => {
                 />
               </div>
             </div>
-
           </Card>
 
           <Card className="p-6">
@@ -185,109 +180,77 @@ const VideoScripts = () => {
               <h3 className="text-lg font-semibold">Customization</h3>
               
               <div>
-                <Label htmlFor="video-style">Video Style</Label>
-                <select
-                  id="video-style"
-                  value={style}
-                  onChange={(e) => setStyle(e.target.value)}
-                  className="w-full mt-1 p-2 border rounded-md bg-background"
-                >
-                  <option value="educational">Educational</option>
-                  <option value="entertainment">Entertainment</option>
-                  <option value="promotional">Promotional</option>
-                  <option value="tutorial">Tutorial</option>
-                  <option value="storytelling">Storytelling</option>
-                  <option value="interview">Interview</option>
-                  <option value="documentary">Documentary</option>
-                </select>
+                <Label htmlFor="tone">Tone</Label>
+                <Select value={tone} onValueChange={setTone}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="casual">Casual</SelectItem>
+                    <SelectItem value="energetic">Energetic</SelectItem>
+                    <SelectItem value="inspiring">Inspiring</SelectItem>
+                    <SelectItem value="educational">Educational</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
+              <div>
+                <Label htmlFor="video-style">Video Style</Label>
+                <Select value={style} onValueChange={setStyle}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="educational">Educational</SelectItem>
+                    <SelectItem value="entertainment">Entertainment</SelectItem>
+                    <SelectItem value="promotional">Promotional</SelectItem>
+                    <SelectItem value="tutorial">Tutorial</SelectItem>
+                    <SelectItem value="storytelling">Storytelling</SelectItem>
+                    <SelectItem value="interview">Interview</SelectItem>
+                    <SelectItem value="documentary">Documentary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
               <div>
                 <Label htmlFor="language">Language</Label>
-                <select
-                  id="language"
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full mt-1 p-2 border rounded-md bg-background"
-                >
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
-                  <option value="German">German</option>
-                  <option value="Italian">Italian</option>
-                  <option value="Portuguese">Portuguese</option>
-                  <option value="Chinese">Chinese</option>
-                  <option value="Japanese">Japanese</option>
-                  <option value="Korean">Korean</option>
-                  <option value="Arabic">Arabic</option>
-                </select>
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="English">English</SelectItem>
+                    <SelectItem value="Spanish">Spanish</SelectItem>
+                    <SelectItem value="French">French</SelectItem>
+                    <SelectItem value="German">German</SelectItem>
+                    <SelectItem value="Italian">Italian</SelectItem>
+                    <SelectItem value="Portuguese">Portuguese</SelectItem>
+                    <SelectItem value="Chinese">Chinese</SelectItem>
+                    <SelectItem value="Japanese">Japanese</SelectItem>
+                    <SelectItem value="Korean">Korean</SelectItem>
+                    <SelectItem value="Arabic">Arabic</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </Card>
-        </div>
 
-        <div className="space-y-6">
           <Button 
             onClick={handleGenerate} 
             className="w-full" 
             disabled={isGenerating || !description.trim()}
           >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating Script...
-              </>
-            ) : (
-              'Generate Video Script'
-            )}
+            {isGenerating ? 'Generating Script...' : 'Generate Video Script'}
           </Button>
+        </div>
 
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Generated Video Script</h2>
-              {generatedScript && (
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {videoDuration}s
-                  </Badge>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={copyToClipboard}
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              )}
-            </div>
-            
-            {!generatedScript && !isGenerating && (
-              <p className="text-muted-foreground text-center py-8">
-                Generate a script to see it here
-              </p>
-            )}
-            
-            {isGenerating && (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                <span>Generating video script...</span>
-              </div>
-            )}
-
-            {generatedScript && (
-              <div className="bg-muted/50 rounded-lg p-4 border">
-                <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                  {generatedScript}
-                </div>
-              </div>
-            )}
-          </Card>
+        <div className="space-y-6">
+          <CaptionPreview
+            caption={isGenerating ? currentProgress : generatedScript}
+            platform={platform}
+            isLoading={isGenerating}
+          />
         </div>
       </div>
     </div>
