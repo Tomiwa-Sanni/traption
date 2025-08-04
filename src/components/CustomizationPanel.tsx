@@ -17,6 +17,7 @@ interface CustomizationPanelProps {
   setLanguage: (language: string) => void;
   captionLength?: string;
   setCaptionLength?: (length: string) => void;
+  selectedPlatform?: string | string[];
 }
 
 export function CustomizationPanel({
@@ -32,8 +33,13 @@ export function CustomizationPanel({
   setLanguage,
   captionLength = 'medium',
   setCaptionLength = () => {},
+  selectedPlatform,
 }: CustomizationPanelProps) {
-  const tones = [
+  const isMembo = Array.isArray(selectedPlatform) 
+    ? selectedPlatform.includes('Membo') 
+    : selectedPlatform === 'Membo';
+
+  const baseTones = [
     { value: 'professional', label: 'Professional' },
     { value: 'casual', label: 'Casual' },
     { value: 'witty', label: 'Witty' },
@@ -41,13 +47,33 @@ export function CustomizationPanel({
     { value: 'promotional', label: 'Promotional' },
   ];
 
-  const styles = [
+  const memboTones = [
+    { value: 'roasting', label: 'Roasting' },
+    { value: 'sarcastic', label: 'Sarcastic' },
+    { value: 'savage', label: 'Savage' },
+    { value: 'wholesome', label: 'Wholesome' },
+    { value: 'chaotic', label: 'Chaotic' },
+  ];
+
+  const tones = isMembo ? memboTones : baseTones;
+
+  const baseStyles = [
     { value: 'hook-story-offer', label: 'Hook-Story-Offer' },
     { value: 'problem-agitate-solution', label: 'Problem-Agitate-Solution' },
     { value: 'listicle', label: 'Listicle' },
     { value: 'question-based', label: 'Question-Based' },
     { value: 'memes', label: 'Memes' },
   ];
+
+  const memboStyles = [
+    { value: 'roast-callout', label: 'Roast/Callout' },
+    { value: 'sarcastic-observations', label: 'Sarcastic Observations' },
+    { value: 'meme-caption', label: 'Meme Caption' },
+    { value: 'viral-takes', label: 'Viral Takes' },
+    { value: 'relatable-moments', label: 'Relatable Moments' },
+  ];
+
+  const styles = isMembo ? memboStyles : baseStyles;
 
   const languages = [
     { value: 'English', label: 'English' },
