@@ -1,21 +1,38 @@
 
 import { useState, useEffect } from 'react';
-
-// Fixed API key for all users
-const FIXED_API_KEY = "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";
+import { supabase } from '@/integrations/supabase/client';
 
 export function useApiKey() {
+  const [apiKey, setApiKey] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Set loading to false after component mount
   useEffect(() => {
-    setIsLoading(false);
+    const fetchApiKey = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('get-api-key');
+        
+        if (error) {
+          console.error('Error fetching API key:', error);
+          setIsLoading(false);
+          return;
+        }
+
+        if (data?.apiKey) {
+          setApiKey(data.apiKey);
+        }
+      } catch (error) {
+        console.error('Error fetching API key:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchApiKey();
   }, []);
 
-  // Always return the fixed API key
   return {
-    apiKey: FIXED_API_KEY,
+    apiKey,
     isLoading,
-    hasApiKey: true,
+    hasApiKey: !!apiKey,
   };
 }
