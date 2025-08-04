@@ -81,6 +81,19 @@ const DEFAULT_PLATFORMS = [
     description: 'Engaging messages for direct sharing',
     icon: <WhatsApp className="h-5 w-5" />,
   },
+  {
+    id: 'membo',
+    name: 'Membo',
+    description: 'The ultimate meme sharing platform. Connect with meme lovers, create viral memes, and share hilarious content',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+      </svg>
+    ),
+  },
 ];
 
 interface PlatformSelectorProps {
@@ -222,8 +235,8 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
       </div>
       
       {/* Platform grid */}
-      <ScrollArea className="w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 min-w-[600px]">
+      <ScrollArea className="w-full max-w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pr-4">
           {availablePlatforms.map(platform => (
             <Button
               key={platform.id}
@@ -245,11 +258,11 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
                   platform.icon
                 )}
               </div>
-              <div className="text-left">
+              <div className="text-left flex-1 min-w-0">
                 <div className={`font-medium ${isPlatformSelected(platform.id) ? 'text-primary dark:text-primary-foreground' : ''}`}>
                   {platform.name}
                 </div>
-                <p className="text-xs text-muted-foreground line-clamp-1">
+                <p className="text-xs text-muted-foreground truncate">
                   {platform.description}
                 </p>
               </div>
@@ -267,9 +280,9 @@ export const PlatformSelector = ({ selectedPlatform, onSelectPlatform }: Platfor
                 <div className="flex-shrink-0">
                   <Plus className="h-5 w-5" />
                 </div>
-                <div className="text-left">
+                <div className="text-left flex-1 min-w-0">
                   <div className="font-medium">Custom Platform</div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground truncate">
                     Add your own platform
                   </p>
                 </div>
